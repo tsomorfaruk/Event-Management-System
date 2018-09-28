@@ -13,8 +13,8 @@
 
 <li><a href="#"><i class="fa fa-sitemap"></i> Performer</a>
 					<ul>
-						<li><a href="post-avehical.php">Post a Performer details</a></li>
-						<li><a href="manage-vehicles.php">Manage Performer</a></li>
+						<li><a href="add-performer.php">Post a Performer details</a></li>
+						<li><a href="manage-performer.php">Manage Performer</a></li>
 					</ul>
 				</li>
 				<li><a href="manage-bookings.php"><i class="fa fa-users"></i> Manage Booking</a></li>

@@ -2,22 +2,36 @@
 //error_reporting(0);
 if (isset($_POST['signup'])) {
     $fname = $_POST['fullname'];
+    $category = $_POST['category'];
     $email = $_POST['emailid'];
     $mobile = $_POST['mobileno'];
-    $password = md5($_POST['password']);
-    $sql = "INSERT INTO  tblusers(FullName,EmailId,ContactNo,Password) VALUES(:fname,:email,:mobile,:password)";
-    $query = $dbh->prepare($sql);
-    $query->bindParam(':fname', $fname, PDO::PARAM_STR);
-    $query->bindParam(':email', $email, PDO::PARAM_STR);
-    $query->bindParam(':mobile', $mobile, PDO::PARAM_STR);
-    $query->bindParam(':password', $password, PDO::PARAM_STR);
-    $query->execute();
-    $lastInsertId = $dbh->lastInsertId();
-    if ($lastInsertId) {
-        echo "<script>alert('Registration successfull. Now you can login');</script>";
-    } else {
-        echo "<script>alert('Something went wrong. Please try again');</script>";
+    $pass = $_POST['password'];
+    $conpass = $_POST['confirmpassword'];
+    $publicationstatus = 'Unpublished';
+    if ($pass != $conpass)
+    {
+        echo "<script>alert('Password and Confirm Password Field do not match  !!');</script>";
     }
+    else
+    {
+        $password = md5($_POST['password']);
+        $sql = "INSERT INTO  tblusers(FullName,PerformerCategoryId,EmailId,ContactNo,Password,PublicaionStatus) VALUES(:fname,:category,:email,:mobile,:password,:publicaionstatus)";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':fname', $fname, PDO::PARAM_STR);
+        $query->bindParam(':category', $category, PDO::PARAM_STR);
+        $query->bindParam(':email', $email, PDO::PARAM_STR);
+        $query->bindParam(':mobile', $mobile, PDO::PARAM_STR);
+        $query->bindParam(':password', $password, PDO::PARAM_STR);
+        $query->bindParam(':publicaionstatus', $publicationstatus, PDO::PARAM_STR);
+        $query->execute();
+        $lastInsertId = $dbh->lastInsertId();
+        if ($lastInsertId) {
+            echo "<script>alert('Registration successfull. Now you can login');</script>";
+        } else {
+            echo "<script>alert('Something went wrong. Please try again');</script>";
+        }
+    }
+
 }
 
 ?>
@@ -39,7 +53,7 @@ if (isset($_POST['signup'])) {
         });
     }
 </script>
-<script type="text/javascript">
+<!--<script type="text/javascript">
     function valid() {
         if (document.signup.password.value != document.signup.confirmpassword.value) {
             alert("Password and Confirm Password Field do not match  !!");
@@ -48,7 +62,7 @@ if (isset($_POST['signup'])) {
         }
         return true;
     }
-</script>
+</script>-->
 <div class="modal fade" id="signupform">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -67,8 +81,24 @@ if (isset($_POST['signup'])) {
                                            required="required">
                                 </div>
                                 <div class="form-group">
+                                    <label class="control-label">Category</label>
+                                    <select class="form-control" name="category">
+                                        <?php $ret = "select CategoryId,CategoryName from tblcategories";
+                                        $query = $dbh->prepare($ret);
+                                        //$query->bindParam(':id',$id, PDO::PARAM_STR);
+                                        $query->execute();
+                                        $resultss = $query->fetchAll(PDO::FETCH_OBJ);
+                                        if ($query->rowCount() > 0) {
+                                            foreach ($resultss as $results) {
+                                                ?>
+                                                <option value="<?php echo htmlentities($results->CategoryId); ?>"><?php echo htmlentities($results->CategoryName); ?></option>
+                                            <?php }
+                                        } ?>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <input type="text" class="form-control" name="mobileno" placeholder="Mobile Number"
-                                           maxlength="10" required="required">
+                                           maxlength="11" required="required">
                                 </div>
                                 <div class="form-group">
                                     <input type="email" class="form-control" name="emailid" id="emailid"
@@ -77,11 +107,11 @@ if (isset($_POST['signup'])) {
                                 </div>
                                 <div class="form-group">
                                     <input type="password" class="form-control" name="password" placeholder="Password"
-                                           required="required">
+                                           required>
                                 </div>
                                 <div class="form-group">
                                     <input type="password" class="form-control" name="confirmpassword"
-                                           placeholder="Confirm Password" required="required">
+                                           placeholder="Confirm Password" required>
                                 </div>
                                 <div class="form-group checkbox">
                                     <input type="checkbox" id="terms_agree" required="required" checked="">

@@ -7,6 +7,7 @@ if (strlen($_SESSION['login']) == 0) {
 } else {
     if (isset($_POST['updateprofile'])) {
         $name = $_POST['fullname'];
+        $categoryid = $_POST['category'];
         $fathername = $_POST['fathername'];
         $mothername = $_POST['mothername'];
         $mobileno = $_POST['mobilenumber'];
@@ -50,10 +51,11 @@ if (strlen($_SESSION['login']) == 0) {
         move_uploaded_file($tmp_video,'assets/uploads/'.$video);
         $movevideo ='assets/uploads/'.$video;
         $email = $_SESSION['login'];
-        $sql = "update tblusers set FullName=:name,FatherName=:fathername,MotherName=:mothername,ContactNo=:mobileno,dob=:dob,Address=:adress,City=:city,PerformanceCost=:performancecost
+        $sql = "update tblusers set FullName=:name,PerformerCategoryId=:categoryid,FatherName=:fathername,MotherName=:mothername,ContactNo=:mobileno,dob=:dob,Address=:adress,City=:city,PerformanceCost=:performancecost
         ,PerformerPhoto=:performerphotopath,NidPhoto=:nidphotopath,Video=:videopath where EmailId=:email";
         $query = $dbh->prepare($sql);
         $query->bindParam(':name', $name, PDO::PARAM_STR);
+        $query->bindParam(':categoryid', $categoryid, PDO::PARAM_STR);
         $query->bindParam(':fathername', $fathername, PDO::PARAM_STR);
         $query->bindParam(':mothername', $mothername, PDO::PARAM_STR);
         $query->bindParam(':mobileno', $mobileno, PDO::PARAM_STR);
@@ -164,7 +166,7 @@ if (strlen($_SESSION['login']) == 0) {
 
     <?php
     $useremail = $_SESSION['login'];
-    $sql = "SELECT * from tblusers where EmailId=:useremail";
+    $sql = "SELECT tblusers.*,tblcategories.CategoryId,tblcategories.CategoryName FROM tblusers join tblcategories on tblusers.PerformerCategoryId=tblcategories.CategoryId where tblusers.EmailId=:useremail";
     $query = $dbh->prepare($sql);
     $query->bindParam(':useremail', $useremail, PDO::PARAM_STR);
     $query->execute();
@@ -217,6 +219,28 @@ if (strlen($_SESSION['login']) == 0) {
                                     <input class="form-control white_bg" name="fullname"
                                            value="<?php echo htmlentities($result->FullName); ?>" id="fullname"
                                            type="text" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Category</label>
+                                    <select class="form-control white_bg" id="category" name="category">
+                                        <option value="<?php echo htmlentities($result->CategoryId); ?>"><?php echo htmlentities($categoryname=$result->CategoryName); ?></option>
+                                        <?php $ret="select CategoryId,CategoryName from tblcategories";
+                                        $query= $dbh -> prepare($ret);
+                                        //$query->bindParam(':id',$id, PDO::PARAM_STR);
+                                        $query-> execute();
+                                        $resultss = $query -> fetchAll(PDO::FETCH_OBJ);
+                                        if($query -> rowCount() > 0)
+                                        {
+                                            foreach($resultss as $results)
+                                            {
+                                                if($results->CategoryName==$categoryname)
+                                                {
+                                                    continue;
+                                                } else{
+                                                    ?>
+                                                    <option value="<?php echo htmlentities($results->CategoryId);?>"><?php echo htmlentities($results->CategoryName);?></option>
+                                                <?php }}} ?>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Father Name</label>
@@ -323,8 +347,6 @@ if (strlen($_SESSION['login']) == 0) {
                                         <option value="Thakurgaon">Thakurgaon</option>
                                     </select>
                                 </div>
-                                <?php }
-                                } ?>
                                 <div class="form-group">
                                     <label class="control-label">Demand for Performance</label>
                                     <input class="form-control white_bg" name="performancecost"
@@ -337,7 +359,7 @@ if (strlen($_SESSION['login']) == 0) {
                                            >
                                     <input type="hidden" name="oldperformerphoto" value="<?php echo htmlentities($result->PerformerPhoto);?>">
                                     <div>
-                                        <img height="180px" width="230px" src="<?php echo htmlentities($result->PerformerPhoto)?>" alt="<?php echo htmlentities($result->FullName)?>">
+                                        <img height="180px" width="230px" src="<?php echo htmlentities($result->PerformerPhoto)?>" alt="<?php echo'Photo of '. htmlentities($result->FullName)?>">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -346,7 +368,7 @@ if (strlen($_SESSION['login']) == 0) {
                                            >
                                     <input type="hidden" name="oldnidphoto" value="<?php echo htmlentities($result->NidPhoto);?>">
                                     <div>
-                                        <img height="180px" width="230px" src="<?php echo htmlentities($result->NidPhoto)?>">
+                                        <img height="180px" width="230px" src="<?php echo htmlentities($result->NidPhoto)?>" alt="<?php echo'Nid scan copy of '. htmlentities($result->FullName)?>">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -355,7 +377,7 @@ if (strlen($_SESSION['login']) == 0) {
                                            >
                                     <input type="hidden" name="oldvideo" value="<?php echo htmlentities($result->Video);?>">
                                     <div>
-                                        <video height="320px" width="500px" src="<?php echo htmlentities($result->Video)?>" controls>
+                                        <video height="320px" width="500px" src="<?php echo htmlentities($result->Video)?>" controls> Upload your Performance video</video>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -363,6 +385,8 @@ if (strlen($_SESSION['login']) == 0) {
                                                 class="angle_arrow"><i class="fa fa-angle-right"
                                                                        aria-hidden="true"></i></span></button>
                                 </div>
+                                <?php }
+                                } ?>
                             </form>
                         </div>
                     </div>
@@ -409,10 +433,4 @@ if (strlen($_SESSION['login']) == 0) {
 <?php
 
 } ?>
-<script>
-    $(document).ready(function () {
-        $('#insert').click(function () {
-           var image_name = $
-        });
-    })
-</script>
+
