@@ -12,7 +12,7 @@ error_reporting(0);
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="keywords" content="">
     <meta name="description" content="">
-    <title>Event Management | Performer list</title>
+    <title>Online Event Management portal | Performer</title>
     <!--Bootstrap -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css">
     <!--Custome Style -->
@@ -66,7 +66,7 @@ error_reporting(0);
                 <h1>Performer List</h1>
             </div>
             <ul class="coustom-breadcrumb">
-                <li><a href="#">Home</a></li>
+                <li><a href="index.php">Home</a></li>
                 <li>Performer List</li>
             </ul>
         </div>
@@ -80,65 +80,124 @@ error_reporting(0);
 <section class="listing-page">
     <div class="container">
         <div class="row">
-            <div class="col-md-9 col-md-push-3">
-                <div class="result-sorting-wrapper">
-                    <div class="sorting-count">
-                        <?php
-                        //Query for Listing count
+            <?php
+            if (isset($_POST['submit'])) {
+                ?>
+                <div class="col-md-9 col-md-push-3">
+                    <div class="result-sorting-wrapper">
+                        <div class="sorting-count">
+                            <?php
+                            //Query for Listing count
 
-                        $categoryid = $_POST['categoryid'];
-                        $city = $_POST['city'];
-                        $published = 'Published';
-                        $sql = "SELECT id FROM 'tblusers' WHERE 'PerformerCategoryId' like :categoryid";
-                        $query = $dbh->prepare($sql);
-                        $query->bindParam(':categoryid', $categoryid,PDO::PARAM_STR);
-                        $query->bindParam(':id', $id, PDO::PARAM_STR);
-                        $query->execute();
-                        $results = $query->fetchAll(PDO::FETCH_OBJ);
-                        $cnt = $query->rowCount();
-                        ?>
-                        <p><span><?php echo htmlentities($cnt); ?> Listings</span></p>
-                    </div>
-                </div>
-
-                <?php
-
-                $sql = "SELECT tblusers.*,tblcategories.CategoryName,tblcategories.CategoryId from tblusers join tblcategories on tblcategories.CategoryId=tblusers.PerformerCategoryId where tblusers.PublicationStatus='Published'/*, tblusers.PerformerCategoryId=:categoryid and tblusers.City=:city*/";
-                $query = $dbh->prepare($sql);
-                $query->bindParam(':categoryid', $categoryid, PDO::PARAM_STR);
-                $query->bindParam(':city', $city, PDO::PARAM_STR);
-                $query->execute();
-                $results = $query->fetchAll(PDO::FETCH_OBJ);
-                $cnt = 1;
-                if ($query->rowCount() > 0) {
-                    foreach ($results as $result) { ?>
-                        <div class="product-listing-m gray-bg">
-                            <div class="product-listing-img"><img height="150px" width="200px"
-                                                                  src="<?php echo htmlentities($result->PerformerPhoto); ?>"
-                                                                  class="img-responsive" alt="Image"/> </a>
-                            </div>
-                            <div class="product-listing-content">
-                                <h5>
-                                    <a href="performer-details.php?vhid=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->CategoryName); ?>
-                                        , <?php echo htmlentities($result->FullName); ?></a></h5>
-                                <p class="list-price">BDT<?php echo htmlentities($result->PerformanceCost); ?> Per Day</p>
-                                <ul>
-                                    <li><i class="fa fa-user"
-                                           aria-hidden="true"></i><?php echo htmlentities($result->City); ?>
-                                    </li>
-                                    <li><i class="fa fa-calendar"
-                                           aria-hidden="true"></i><?php echo htmlentities($result->id); ?> Reg.
-                                        no
-                                    </li>
-                                </ul>
-                                <a href="performer-details.php?vhid=<?php echo htmlentities($result->id); ?>" class="btn">View
-                                    Details <span class="angle_arrow"><i class="fa fa-angle-right"
-                                                                         aria-hidden="true"></i></span></a>
-                            </div>
+                            $categoryid = $_POST['categoryid'];
+                            $city = $_POST['city'];
+                            $published = 'Published';
+                            $sql = "SELECT id FROM tblusers WHERE PerformerCategoryId=:categoryid";
+                            $query = $dbh->prepare($sql);
+                            $query->bindParam(':categoryid', $categoryid, PDO::PARAM_STR);
+                            $query->bindParam(':published', $published, PDO::PARAM_STR);
+                            $query->bindParam(':cityy', $city, PDO::PARAM_STR);
+                            $query->execute();
+                            $results = $query->fetchAll(PDO::FETCH_OBJ);
+                            $cnt = $query->rowCount();
+                            ?>
+                            <p><span><?php echo htmlentities($cnt); ?> Listings</span></p>
                         </div>
-                    <?php }
-                } ?>
-            </div>
+                    </div>
+
+                    <?php
+
+                    $sql = "SELECT tblusers.*,tblcategories.CategoryName,tblcategories.CategoryId from tblusers join tblcategories on tblcategories.CategoryId=tblusers.PerformerCategoryId where tblusers.PublicationStatus='Published', tblusers.PerformerCategoryId=:categoryid and tblusers.City=:city";
+                    $query = $dbh->prepare($sql);
+                    $query->bindParam(':categoryid', $categoryid, PDO::PARAM_STR);
+                    $query->bindParam(':city', $city, PDO::PARAM_STR);
+                    $query->execute();
+                    $results = $query->fetchAll(PDO::FETCH_OBJ);
+                    $cnt = 1;
+                    if ($query->rowCount() > 0) {
+                        foreach ($results as $result) { ?>
+                            <div class="product-listing-m gray-bg">
+                                <div class="product-listing-img"><img height="150px" width="200px"
+                                            src="<?php echo htmlentities($result->PerformerPhoto); ?>"
+                                            class="img-responsive" alt="Image"/> </a>
+                                </div>
+                                <div class="product-listing-content">
+                                    <h5>
+                                        <a href="performer-details.php?id=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->CategoryName); ?>
+                                            , <?php echo htmlentities($result->FullName); ?></a></h5>
+                                    <p class="list-price">BDT<?php echo htmlentities($result->PerformanceCost); ?> Per Day</p>
+                                    <ul>
+                                        <li><i class="fa fa-user"
+                                               aria-hidden="true"></i><?php echo htmlentities($result->City); ?>
+                                        </li>
+                                        <li><i class="fa fa-calendar"
+                                               aria-hidden="true"></i><?php echo htmlentities($result->id); ?> Reg.
+                                            no
+                                        </li>
+                                    </ul>
+                                    <a href="performer-details.php?id=<?php echo htmlentities($result->id); ?>" class="btn">View
+                                        Details <span class="angle_arrow"><i class="fa fa-angle-right"
+                                                                             aria-hidden="true"></i></span></a>
+                                </div>
+                            </div>
+                        <?php }
+                    } ?>
+                </div>
+                <?php
+            } else {
+                ?>
+                <div class="col-md-9 col-md-push-3">
+                    <div class="result-sorting-wrapper">
+                        <div class="sorting-count">
+                            <?php
+                            //Query for Listing count
+                            $sql = "SELECT id from tblusers where PublicationStatus='Published'";
+                            $query = $dbh->prepare($sql);
+                            $query->bindParam(':id', $id, PDO::PARAM_STR);
+                            $query->execute();
+                            $results = $query->fetchAll(PDO::FETCH_OBJ);
+                            $cnt = $query->rowCount();
+                            ?>
+                            <p><span><?php echo htmlentities($cnt); ?> Listings</span></p>
+                        </div>
+                    </div>
+
+                    <?php $sql = "SELECT tblusers.*,tblcategories.CategoryName,tblcategories.CategoryId from tblusers join tblcategories on tblcategories.CategoryId=tblusers.PerformerCategoryId where tblusers.PublicationStatus='Published'";
+                    $query = $dbh->prepare($sql);
+                    $query->execute();
+                    $results = $query->fetchAll(PDO::FETCH_OBJ);
+                    $cnt = 1;
+                    if ($query->rowCount() > 0) {
+                        foreach ($results as $result) { ?>
+                            <div class="product-listing-m gray-bg">
+                                <div class="product-listing-img"><img height="150px" width="200px"
+                                                                      src="<?php echo htmlentities($result->PerformerPhoto); ?>"
+                                                                      class="img-responsive" alt="Image"/> </a>
+                                </div>
+                                <div class="product-listing-content">
+                                    <h5>
+                                        <a href="vehical-details.php?id=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->CategoryName); ?>
+                                            , <?php echo htmlentities($result->FullName); ?></a></h5>
+                                    <p class="list-price">BDT<?php echo htmlentities($result->PerformanceCost); ?> Per
+                                        Day</p>
+                                    <ul>
+                                        <li><i class="fa fa-user"
+                                               aria-hidden="true"></i><?php echo htmlentities($result->City); ?> </li>
+                                        <li><i class="fa fa-calendar"
+                                               aria-hidden="true"></i><?php echo htmlentities($result->id); ?> Reg. no
+                                        </li>
+                                    </ul>
+                                    <a href="performer-details.php?id=<?php echo htmlentities($result->id); ?>"
+                                       class="btn">View Details <span class="angle_arrow"><i class="fa fa-angle-right"
+                                                                                             aria-hidden="true"></i></span></a>
+                                </div>
+                            </div>
+                        <?php }
+                    } ?>
+                </div>
+                <?php
+            }
+            ?>
 
             <!--Side-Bar-->
             <aside class="col-md-3 col-md-pull-9">
@@ -237,7 +296,7 @@ error_reporting(0);
 
                             <div class="form-group">
                                 <button type="submit" name="submit" class="btn btn-block"><i class="fa fa-search"
-                                                                                             aria-hidden="true"></i> Search Performer
+                                                                               aria-hidden="true"></i> Search Performer
                                 </button>
                             </div>
                         </form>
@@ -260,11 +319,11 @@ error_reporting(0);
 
                                     <li class="gray-bg">
                                         <div class="recent_post_img"><a
-                                                    href="performer-details.php?vhid=<?php echo htmlentities($result->id); ?>"><img
+                                                    href="performer-details.php?id=<?php echo htmlentities($result->id); ?>"><img
                                                         src="<?php echo htmlentities($result->PerformerPhoto); ?>"
                                                         alt="image"></a></div>
                                         <div class="recent_post_title"><a
-                                                    href="performer-details.php?vhid=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->CategoryName); ?>
+                                                    href="performer-details.php?id=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->CategoryName); ?>
                                                 , <?php echo htmlentities($result->FullName); ?></a>
                                             <p class="widget_price">
                                                 BDT<?php echo htmlentities($result->PerformanceCost); ?> Per Day</p>

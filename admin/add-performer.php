@@ -7,8 +7,6 @@ if (strlen($_SESSION['alogin']) == 0) {
 } else {
 
     if (isset($_POST['addprofile'])) {
-        print_r($_POST);
-        die();
         $fullname = $_POST['fullname'];
         $categoryid = $_POST['category'];
         $fathername = $_POST['fathername'];
@@ -26,19 +24,20 @@ if (strlen($_SESSION['alogin']) == 0) {
         $tmp_performerphoto = $_FILES['performerphoto']['tmp_name'];
         $performerphoto = $_FILES['performerphoto']['name'];
         $moveperformerphoto = move_uploaded_file($tmp_performerphoto, 'assets/uploads/' . $performerphoto);
-        $performerphotopath = 'assets/uploads/' . $performerphoto;
+        $performerphotopath = 'assets/uploads/' . $performerphoto;;
         //for nid photo upload
         $nidphoto = $_FILES['nidphoto']['name'];
         $tmp_nidphoto = $_FILES['nidphoto']['tmp_name'];
         $movenidphoto = move_uploaded_file($tmp_nidphoto, 'assets/uploads/' . $nidphoto);
         $nidphotopath = 'assets/uploads/' . $nidphoto;
+
         //for video upload
         $video = $_FILES['video']['name'];
         $tmp_video = $_FILES['video']['tmp_name'];
         $movevideo = move_uploaded_file($tmp_video, 'assets/uploads/' . $video);
         $videopath = 'assets/uploads/' . $video;
-        $sql = "INSERT INTO  tblusers(FullName,PerformerCategoryId,FatherName,MotherName,EmailId,Password,ContactNo,dob,Address,City,PerformanceCost,Activation, PublicationStatus,PerformerPhoto,NidPhoto,Video) 
-        VALUES(:fullname,:categoryid,fathername,:mothername,:email,:password,:mobileno,:dob,:address,:city,:performancecost,:activationstatus,:publicationstatus,:performerphotopath,:nidphotopath,:videopath)";
+
+        $sql = "INSERT INTO  tblusers(FullName,PerformerCategoryId,FatherName,MotherName,EmailId,Password,ContactNo,dob,Address,City,PerformanceCost,PerformerPhoto,NidPhoto,Video,Activation,PublicationStatus) VALUES(:fullname,:categoryid,:fathername,:mothername,:email,:password,:mobileno,:dob,:address,:city,:performancecost,:performerphotopath,:nidphotopath,:videopath,:activationstatus,:publicationstatus)";
         $query = $dbh->prepare($sql);
         $query->bindParam(':fullname', $fullname, PDO::PARAM_STR);
         $query->bindParam(':categoryid', $categoryid, PDO::PARAM_STR);
@@ -51,15 +50,15 @@ if (strlen($_SESSION['alogin']) == 0) {
         $query->bindParam(':address', $address, PDO::PARAM_STR);
         $query->bindParam(':city', $city, PDO::PARAM_STR);
         $query->bindParam(':performancecost', $performancecost, PDO::PARAM_STR);
-        $query->bindParam(':activationstatus', $activationstatus, PDO::PARAM_STR);
-        $query->bindParam(':publicationstatus', $publicationstatus, PDO::PARAM_STR);
         $query->bindParam(':performerphotopath', $performerphotopath, PDO::PARAM_STR);
         $query->bindParam(':nidphotopath', $nidphotopath, PDO::PARAM_STR);
         $query->bindParam(':videopath', $videopath, PDO::PARAM_STR);
-        $query->execute();
+        $query->bindParam(':activationstatus', $activationstatus, PDO::PARAM_STR);
+        $query->bindParam(':publicationstatus', $publicationstatus, PDO::PARAM_STR);
+        $rslt = $query->execute();
         $msg = "Profile Updated Successfully";
-        $lastInsertId = $dbh->lastInsertId();
-        if ($lastInsertId) {
+//$lastInsertId = $dbh->lastInsertId();
+        if ($rslt) {
             $msg = "Vehicle posted successfully";
         } else {
             $error = "Something went wrong. Please try again";
@@ -143,7 +142,8 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         </div><?php } ?>
 
                                     <div class="panel-body">
-                                        <form method="post" class="form-horizontal" enctype="multipart/form-data" multiple>
+                                        <form method="post" class="form-horizontal" enctype="multipart/form-data"
+                                              multiple>
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label">Full Name<span
                                                             style="color:red">*</span></label>
@@ -203,7 +203,8 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                 <label class="col-sm-2 control-label">Phone Number<span
                                                             style="color:red">*</span></label>
                                                 <div class="col-sm-4">
-                                                    <input type="text" name="mobilenumber" class="form-control" max="11">
+                                                    <input type="text" name="mobilenumber" class="form-control"
+                                                           max="11">
                                                 </div>
                                                 <label class="col-sm-2 control-label">Date of
                                                     Birth&nbsp;(dd/mm/yyyy)<span style="color:red">*</span></label>
@@ -294,7 +295,8 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label">Address<span
                                                             style="color:red">*</span></label>
-                                                <textarea class="col-sm-4 form-control" name="address" rows="4"></textarea>
+                                                <textarea class="col-sm-4 form-control" name="address"
+                                                          rows="4"></textarea>
                                             </div>
                                             <div class="hr-dashed"></div>
                                             <div class="form-group">
