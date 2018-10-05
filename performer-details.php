@@ -62,54 +62,7 @@ error_reporting(0);
 <!-- /Header -->
 
 <!--Listing-Image-Slider-->
-<?php
-if (isset($_POST['cartresult'])) {
 
-    $performerid = $_GET['id'];
-    $sql = "SELECT FullName, PerformanceCost, PerformerPhoto FROM tblusers WHERE id=:performerid";
-    $query = $dbh->prepare($sql);
-    $query->bindParam(':performerid', $performerid, PDO::PARAM_STR);
-    $query->execute();
-    $results = $query->fetchAll(PDO::FETCH_OBJ);
-    if ($query->rowCount() > 0) {
-        foreach ($results as $result)
-        {
-            $performername = $result->FullName;
-            $performancecost = $result->PerformanceCost;
-            $performerphoto = $result->PerformerPhoto;
-            $sessionid = session_id();
-            $performdate = $_POST['calendar'];
-            $performdatearr = explode(', ', $performdate);
-            $datequantity = count($performdatearr);
-
-            $sqli = "INSERT INTO  tblcart(SessionId,PerformerId,PerformerName,PerformanceCost,PerformanceDate,DateQuantity,PerformerPhoto) 
-                    VALUES(:sessionid,:id,:performername,:performancecost,:performdate,:datequantity,:performerphoto)";
-            $query = $dbh->prepare($sqli);
-            $query->bindParam(':sessionid', $sessionid, PDO::PARAM_STR);
-            $query->bindParam(':id', $performerid, PDO::PARAM_STR);
-            $query->bindParam(':performername', $performername, PDO::PARAM_STR);
-            $query->bindParam(':performancecost', $performancecost, PDO::PARAM_STR);
-            $query->bindParam(':performdate', $performdate, PDO::PARAM_STR);
-            $query->bindParam(':datequantity', $datequantity, PDO::PARAM_STR);
-            $query->bindParam(':performerphoto', $performerphoto, PDO::PARAM_STR);
-            $query->execute();
-            $lastInsertId = $dbh->lastInsertId();
-            if ($lastInsertId)
-            {
-                echo "<script>alert('Add Cart successfully.');</script>";
-            }
-            else {
-                echo "<script>alert('Something went wrong. Please try again');</script>";
-            }
-        }
-    }
-
-
-    /*$newformat = strtotime($performdatearr[0]);
-    $newnformat = date('d-m-y',$newformat);*/
-
-}
-?>
 <?php
 $id = intval($_GET['id']);
 $sql = "SELECT tblusers.*,tblcategories.CategoryName,tblcategories.CategoryId from tblusers join tblcategories on tblcategories.CategoryId=tblusers.PerformerCategoryId where tblusers.id=:id";
@@ -217,7 +170,7 @@ if ($query->rowCount() > 0)
                         <div class="form-group">
                             <h5 style="color: black; background-color: #6be83a; text-align: center ">ACTIVE</h5>
                         </div>
-                        <form method="post">
+                        <form action="checkout.php">
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Date" name="calendar"
                                        id="calendar"/>

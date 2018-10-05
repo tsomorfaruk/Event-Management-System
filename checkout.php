@@ -57,14 +57,47 @@ error_reporting(0);
 <!--Header-->
 <?php include('includes/header.php'); ?>
 <!-- /Header -->
+
 <?php
-    if (isset($_POST['cartresult'])){
-        $performerid = $_GET['id'];
-        $performdate = $_POST['calendar'];
-        echo $performerid;
-        echo $performdate;
-        die();
+if (isset($_POST['cartresult'])) {
+
+    $performerid = $_GET['id'];
+    $sql = "SELECT FullName, PerformanceCost, PerformerPhoto FROM tblusers WHERE id=:performerid";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':performerid', $performerid, PDO::PARAM_STR);
+    $query->execute();
+    $results = $query->fetchAll(PDO::FETCH_OBJ);
+    if ($query->rowCount() > 0) {
+        foreach ($results as $result)
+        {
+            $performername = $result->FullName;
+            $performancecost = $result->PerformanceCost;
+            $performerphoto = $result->PerformerPhoto;
+            $sessionid = session_id();
+            $performdate = $_POST['calendar'];
+            $performdatearr = explode(', ', $performdate);
+            $datequantity = count($performdatearr);
+
+            $sqli = "INSERT INTO  tblcart(SessionId,PerformerId,PerformerName,PerformanceCost,PerformanceDate,DateQuantity,PerformerPhoto) 
+                    VALUES(:sessionid,:id,:performername,:performancecost,:performdate,:datequantity,:performerphoto)";
+            $query = $dbh->prepare($sqli);
+            $query->bindParam(':sessionid', $sessionid, PDO::PARAM_STR);
+            $query->bindParam(':id', $performerid, PDO::PARAM_STR);
+            $query->bindParam(':performername', $performername, PDO::PARAM_STR);
+            $query->bindParam(':performancecost', $performancecost, PDO::PARAM_STR);
+            $query->bindParam(':performdate', $performdate, PDO::PARAM_STR);
+            $query->bindParam(':datequantity', $datequantity, PDO::PARAM_STR);
+            $query->bindParam(':performerphoto', $performerphoto, PDO::PARAM_STR);
+            $query->execute();
+
+        }
     }
+
+
+    /*$newformat = strtotime($performdatearr[0]);
+    $newnformat = date('d-m-y',$newformat);*/
+
+}
 ?>
 
 <!--Listing-detail-->
@@ -78,43 +111,62 @@ error_reporting(0);
                 <thead>
                 <tr>
                     <th>Remove</th>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Product Name</th>
-                    <th>Price</th>
+                    <th>Performer Photo</th>
+                    <th>Performer Name</th>
+                    <th>Perform Date</th>
+                    <th>How many Dates</th>
+                    <th>Performance Cost</th>
                 </tr>
                 </thead>
+                <?php
+                $sql = "SELECT * FROM tblcart WHERE SessionId=:sessionid";
+                $query= $dbh -> prepare($sql);
+                $query-> bindParam(':sessionid', $sessionid, PDO::PARAM_STR);
+                $query-> execute();
+                $results=$query->fetchAll(PDO::FETCH_OBJ);
+                if($query->rowCount() > 0)
+                {
+                    $sum =0;
+                    $i = 0;
+                    foreach ($results as $result)
+                    {
+                        ?>
+                        <tr class="rem1">
+                            <td class="invert-closeb">
+                                <div class="rem">
+                                    <a href="deleteCart.php?cartId=<?php echo $result->CartId; ?>"
+                                       onclick="return confirm('Are you want to delete this');"class="close1">X</a>
+                                </div>
+                            </td>
+                            <td class="invert-image" align="center"><img width="120px"
+                                                                         src="<?php echo $result->PerformerPhoto; ?>"
+                                                                         alt=" "
+                                                                         class="img-responsive"/></td>
 
-                <tr class="rem1">
-                    <td class="invert-closeb">
-                        <div class="rem">
-                            <a href="deleteCart.php?cartId=<?php echo $cartProduct['cart_id']; ?>"
-                               onclick="return confirm('Are you want to delete this');"class="close1">X</a>
-                        </div>
-                    </td>
-                    <td class="invert-image" align="center"><img width="120px"
-                                                                 src="<?php echo $cartProduct['product_image']; ?>"
-                                                                 alt=" "
-                                                                 class="img-responsive"/></td>
-                    <td class="invert">
-                        <div class="quantity">
-                            <div class="quantity-select">
-                                <form action="" method="post">
-                                    <select id="country1" name="cproduct_quantity">
-                                        <option value=""></option>
+                            <td class="invert"><?php echo $result->PerformerName;?></td>
+                            <td class="invert"><?php echo $result->PerformanceDate;?></td>
+                            <td class="invert"><?php
 
-                                    </select>
-                                    <input type="hidden" name="cartId" value="">
-                                    <input type="submit" value="Update">
-                                </form>
+                                $datequantity = $result->DateQuantity;
+                                echo $datequantity;?></td>
+                            <td class="invert"><?php
 
-                            </div>
-                        </div>
-                    </td>
-                    <td class="invert">rhfeth</td>
-                    <td class="invert">fdgh</td>
+                                $cost = $result->PerformanceCost;
+                                $total = $datequantity * $cost;
+                                echo $total;?></td>
+                        </tr>
+                    <?php
+                        $sum = $sum + $total;
+                        $performer = $result->PerformerId;
+                        if ($performer){
+                            $i++;
+                        }
+                        $_SESSION['sum'] = $sum;
+                        $_SESSION['performer'] = $i;
+                    }
+                }
+                ?>
 
-                </tr>
             </table>
         </div>
         <div class="checkout-left">
