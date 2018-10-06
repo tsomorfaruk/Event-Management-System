@@ -1,4 +1,4 @@
-<header>
+<header xmlns="http://www.w3.org/1999/html">
     <div class="default-header">
         <div class="container">
             <div class="row">
@@ -97,37 +97,38 @@
             <div class="collapse navbar-collapse" id="navigation">
                 <ul class="nav navbar-nav">
                     <li><a href="index.php">Home</a></li>
-
                     <li><a href="page.php?type=aboutus">About Us</a></li>
-                    <li><a href="performer-list.php">Performer List</a>
-                    <li><a href="page.php?type=faqs">FAQs</a></li>
+                    <li><a href="performer-list.php">Performer List</a></li>
                     <li><a href="contact-us.php">Contact Us</a></li>
-                </ul>
-                <div style="float: left;">
-                    <?php
-                    $sessionid = session_id();
-                    $sql ="SELECT * FROM tblcart WHERE SessionId=:sessionid";
-                    $query= $dbh -> prepare($sql);
-                    $query-> bindParam(':sessionid', $sessionid, PDO::PARAM_STR);
-                    $query-> execute();
-                    $results=$query->fetchAll(PDO::FETCH_OBJ);
-                    if($query->rowCount() > 0)
-                    {
-                        foreach ($results as $result)
+                    <li>
+                        <?php
+                        $sessionid = session_id();
+                        $sql = "SELECT * FROM tblcart WHERE Sessionid=:sessionid";
+                        $query = $dbh->prepare($sql);
+                        $query->bindParam(':sessionid', $sessionid, PDO::PARAM_STR);
+                        $query->execute();
+                        $results = $query->fetchAll(PDO::FETCH_OBJ);
+                        if ($query->rowCount() > 0)
                         {
-
-                        }
-                    }
-                    ?>
-                        <a href="cart.php">
-                            <h3>
-                                <div style="top: 1px; left: -5px;">
-                                    <i class="glyphicon glyphicon-shopping-cart" aria-hidden="true" style="color: white"><?php echo $_SESSION['performer']; ?></i>
-                                </div>
-                            </h3>
+                        ?>
+                        <a href="checkout.php">
+                            <div>
+                                <i class="glyphicon glyphicon-shopping-cart" aria-hidden="true"
+                                   style="color: white"></i>(
+                                <?php echo $_SESSION['performer']; ?>
+                                </span> Performer) <?php echo $_SESSION['sum']; ?> Tk
+                            </div>
                         </a>
-                        <p><a href="#" style="color: #fff; font-size: 13px; text-decoration: none; text-align: center; display: block;"><?php echo $_SESSION['sum']; ?></a></p>
-                </div>
+                    </li>
+                    <?php
+                    }
+                    else {
+                    ?>
+
+                    <li><a href="#">(Cart Empty)</a></li>
+                </ul>
+                <?php }
+                ?>
             </div>
         </div>
     </nav>

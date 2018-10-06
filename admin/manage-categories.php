@@ -4,7 +4,9 @@ error_reporting(0);
 include('includes/config.php');
 if (strlen($_SESSION['alogin']) == 0) {
     header('location:index.php');
-} else {
+}
+else
+    {
     if (isset($_GET['del'])) {
         $id = $_GET['del'];
         $sql = "delete from tblcategories  WHERE CategoryId=:id";
@@ -14,7 +16,6 @@ if (strlen($_SESSION['alogin']) == 0) {
         $msg = "Page data updated  successfully";
 
     }
-
 
     ?>
 

@@ -2,6 +2,14 @@
 session_start();
 include('includes/config.php');
 error_reporting(0);
+if (isset($_GET['del']))
+{
+    $id = $_GET['del'];
+    $sql = "delete from tblcart  WHERE CartId=:id";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':id', $id, PDO::PARAM_STR);
+    $query->execute();
+}
 
 ?>
 
@@ -58,47 +66,7 @@ error_reporting(0);
 <?php include('includes/header.php'); ?>
 <!-- /Header -->
 
-<?php
-if (isset($_POST['cartresult'])) {
 
-    $performerid = $_GET['id'];
-    $sql = "SELECT FullName, PerformanceCost, PerformerPhoto FROM tblusers WHERE id=:performerid";
-    $query = $dbh->prepare($sql);
-    $query->bindParam(':performerid', $performerid, PDO::PARAM_STR);
-    $query->execute();
-    $results = $query->fetchAll(PDO::FETCH_OBJ);
-    if ($query->rowCount() > 0) {
-        foreach ($results as $result)
-        {
-            $performername = $result->FullName;
-            $performancecost = $result->PerformanceCost;
-            $performerphoto = $result->PerformerPhoto;
-            $sessionid = session_id();
-            $performdate = $_POST['calendar'];
-            $performdatearr = explode(', ', $performdate);
-            $datequantity = count($performdatearr);
-
-            $sqli = "INSERT INTO  tblcart(SessionId,PerformerId,PerformerName,PerformanceCost,PerformanceDate,DateQuantity,PerformerPhoto) 
-                    VALUES(:sessionid,:id,:performername,:performancecost,:performdate,:datequantity,:performerphoto)";
-            $query = $dbh->prepare($sqli);
-            $query->bindParam(':sessionid', $sessionid, PDO::PARAM_STR);
-            $query->bindParam(':id', $performerid, PDO::PARAM_STR);
-            $query->bindParam(':performername', $performername, PDO::PARAM_STR);
-            $query->bindParam(':performancecost', $performancecost, PDO::PARAM_STR);
-            $query->bindParam(':performdate', $performdate, PDO::PARAM_STR);
-            $query->bindParam(':datequantity', $datequantity, PDO::PARAM_STR);
-            $query->bindParam(':performerphoto', $performerphoto, PDO::PARAM_STR);
-            $query->execute();
-
-        }
-    }
-
-
-    /*$newformat = strtotime($performdatearr[0]);
-    $newnformat = date('d-m-y',$newformat);*/
-
-}
-?>
 
 <!--Listing-detail-->
 <section class="listing-detail">
@@ -134,7 +102,7 @@ if (isset($_POST['cartresult'])) {
                         <tr class="rem1">
                             <td class="invert-closeb">
                                 <div class="rem">
-                                    <a href="deleteCart.php?cartId=<?php echo $result->CartId; ?>"
+                                    <a href="checkout.php?del=<?php echo $result->CartId; ?>"
                                        onclick="return confirm('Are you want to delete this');"class="close1">X</a>
                                 </div>
                             </td>
@@ -150,13 +118,11 @@ if (isset($_POST['cartresult'])) {
                                 $datequantity = $result->DateQuantity;
                                 echo $datequantity;?></td>
                             <td class="invert"><?php
-
                                 $cost = $result->PerformanceCost;
-                                $total = $datequantity * $cost;
-                                echo $total;?></td>
+                                echo $cost;?></td>
                         </tr>
                     <?php
-                        $sum = $sum + $total;
+                        $sum = $sum + $cost;
                         $performer = $result->PerformerId;
                         if ($performer){
                             $i++;
@@ -171,11 +137,11 @@ if (isset($_POST['cartresult'])) {
         </div>
         <div class="checkout-left">
             <div class="checkout-right-basket animated wow slideInRight" data-wow-delay=".5s">
-                <a href="index.php"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>Back To
+                <a href="performer-list.php"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>Back To
                     Shopping</a>
             </div>
             <div class="checkout-right-basket animated wow slideInRight" data-wow-delay=".5s">
-                <a href="payment.php">Checkout     <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a>
+                <a href="booking-confirm.php">Confirm Booking     <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a>
             </div>
             <div class="checkout-left-basket animated wow slideInLeft" data-wow-delay=".5s">
                 <h4>Shopping basket</h4>

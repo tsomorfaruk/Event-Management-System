@@ -4,7 +4,46 @@ include('includes/config.php');
 error_reporting(0);
 
 ?>
+<?php
+if (isset($_POST['cartresult'])) {
 
+    $performerid = $_GET['id'];
+    $sql = "SELECT FullName, PerformanceCost, PerformerPhoto FROM tblusers WHERE id=:performerid";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':performerid', $performerid, PDO::PARAM_STR);
+    $query->execute();
+    $results = $query->fetchAll(PDO::FETCH_OBJ);
+    if ($query->rowCount() > 0) {
+        foreach ($results as $result)
+        {
+            $performername = $result->FullName;
+            $perdayperformancecost = $result->PerformanceCost;
+            $performerphoto = $result->PerformerPhoto;
+        }
+    }
+    $sessionid = session_id();
+    $performdate = $_POST['calendar'];
+    $performdatearr = explode(', ', $performdate);
+    $datequantity = count($performdatearr);
+    $performancecost = $datequantity * $perdayperformancecost;
+
+    $sqli = "INSERT INTO tblcart(SessionId,PerformerId,PerformerName,PerformanceCost,PerformanceDate,DateQuantity,PerformerPhoto) 
+                    VALUES(:sessionid,:id,:performername,:performancecost,:performdate,:datequantity,:performerphoto)";
+    $query = $dbh->prepare($sqli);
+    $query->bindParam(':sessionid', $sessionid, PDO::PARAM_STR);
+    $query->bindParam(':id', $performerid, PDO::PARAM_STR);
+    $query->bindParam(':performername', $performername, PDO::PARAM_STR);
+    $query->bindParam(':performancecost', $performancecost, PDO::PARAM_STR);
+    $query->bindParam(':performdate', $performdate, PDO::PARAM_STR);
+    $query->bindParam(':datequantity', $datequantity, PDO::PARAM_STR);
+    $query->bindParam(':performerphoto', $performerphoto, PDO::PARAM_STR);
+    $query->execute();
+    header('Location: checkout.php');
+
+    /*$newformat = strtotime($performdatearr[0]);
+    $newnformat = date('d-m-y',$newformat);*/
+}
+?>
 
 <!DOCTYPE HTML>
 <html lang="en">
@@ -80,7 +119,7 @@ if ($query->rowCount() > 0)
 
     <section id="listing_img_slider">
         <div><img src="<?php echo htmlentities($result->PerformerPhoto); ?>" class="img-responsive" alt="image"
-                  width="900" height="560"></div>
+                  width="320" height="240"></div>
     </section>
 <!--/Listing-Image-Slider-->
 
@@ -170,7 +209,7 @@ if ($query->rowCount() > 0)
                         <div class="form-group">
                             <h5 style="color: black; background-color: #6be83a; text-align: center ">ACTIVE</h5>
                         </div>
-                        <form action="checkout.php">
+                        <form method="post">
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Date" name="calendar"
                                        id="calendar"/>
