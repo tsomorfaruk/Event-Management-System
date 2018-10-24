@@ -155,7 +155,7 @@ if ($query->rowCount() > 0)
             </li>-->
 
                         <li><i class="fa fa-user-plus" aria-hidden="true"></i>
-                            <h5><?php echo htmlentities($result->ContactNo); ?></h5>
+                            <h5><?php echo htmlentities($result->City); ?></h5>
                             <p>Performed</p>
                         </li>
                     </ul>

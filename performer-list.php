@@ -176,7 +176,7 @@ error_reporting(0);
                                 </div>
                                 <div class="product-listing-content">
                                     <h5>
-                                        <a href="vehical-details.php?id=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->CategoryName); ?>
+                                        <a href="performer-details.php?id=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->CategoryName); ?>
                                             , <?php echo htmlentities($result->FullName); ?></a></h5>
                                     <p class="list-price">BDT<?php echo htmlentities($result->PerformanceCost); ?> Per
                                         Day</p>
@@ -206,7 +206,7 @@ error_reporting(0);
                         <h5><i class="fa fa-filter" aria-hidden="true"></i> Find Your Performer </h5>
                     </div>
                     <div class="sidebar_filter">
-                        <form method="post" action="search-carresult.php">
+                        <form method="post" action="search-performerresult.php">
                             <div class="form-group select">
                                 <select class="form-control" name="categoryid">
                                     <option>Select Category</option>
@@ -291,6 +291,15 @@ error_reporting(0);
                                     <option value="Shylet">Shylhet</option>
                                     <option value="Tangail">Tangail</option>
                                     <option value="Thakurgaon">Thakurgaon</option>
+                                </select>
+                            </div>
+                            <div class="form-group select">
+                                <select class="form-control" name="budget">
+                                    <option>Add Budget</option>
+                                    <option value="1000,5000">1,000-5,000</option>
+                                    <option value="5001,10000">5,001-10,000</option>
+                                    <option value="10001,15000">10,001-15,000</option>
+                                    <option value="15001,20000">15,001-20,000</option>
                                 </select>
                             </div>
 

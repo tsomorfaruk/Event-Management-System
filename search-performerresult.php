@@ -138,7 +138,7 @@ error_reporting(0);
                         <h5><i class="fa fa-filter" aria-hidden="true"></i> Find Your Performer </h5>
                     </div>
                     <div class="sidebar_filter">
-                        <form method="post" action="search-carresult.php">
+                        <form method="post" action="search-performerresult.php">
                             <div class="form-group select">
                                 <select class="form-control" name="categoryid">
                                     <option>Select Category</option>
@@ -225,6 +225,15 @@ error_reporting(0);
                                     <option value="Thakurgaon">Thakurgaon</option>
                                 </select>
                             </div>
+                            <div class="form-group select">
+                                <select class="form-control" name="budget">
+                                    <option>Add Budget</option>
+                                    <option value="1000,5000">1,000-5,000</option>
+                                    <option value="5001,10000">5,001-10,000</option>
+                                    <option value="10001,15000">10,001-15,000</option>
+                                    <option value="15001,20000">15,001-20,000</option>
+                                </select>
+                            </div>
 
                             <div class="form-group">
                                 <button type="submit" name="submit" class="btn btn-block"><i class="fa fa-search"
@@ -238,12 +247,15 @@ error_reporting(0);
 
                 <div class="sidebar_widget">
                     <div class="widget_heading">
-                        <h5><i aria-hidden="true"></i> Recently Listed Performer</h5>
+                        <h6><i aria-hidden="true"> Recently Listed Performer in Same Category & City</h6>
                     </div>
                     <div class="recent_addedcars">
                         <ul>
-                            <?php $sql = "SELECT tblusers.*,tblcategories.CategoryName,tblcategories.CategoryId from tblusers join tblcategories on tblcategories.CategoryId=tblusers.PerformerCategoryId where tblusers.PublicationStatus='Published' order by id desc limit 4";
+                            <?php
+                            $sql = "SELECT tblusers.*,tblcategories.CategoryName,tblcategories.CategoryId from tblusers join tblcategories on tblcategories.CategoryId=tblusers.PerformerCategoryId where tblusers.PublicationStatus='Published' AND tblusers.PerformerCategoryId=:categoryid AND tblusers.City=:city order by id desc limit 4";
                             $query = $dbh->prepare($sql);
+                            $query->bindParam(':categoryid', $categoryid, PDO::PARAM_STR);
+                            $query->bindParam(':city', $city, PDO::PARAM_STR);
                             $query->execute();
                             $results = $query->fetchAll(PDO::FETCH_OBJ);
                             $cnt = 1;
@@ -252,11 +264,11 @@ error_reporting(0);
 
                                     <li class="gray-bg">
                                         <div class="recent_post_img"><a
-                                                    href="performer-details.php?vhid=<?php echo htmlentities($result->id); ?>"><img
-                                                        src="<?php echo htmlentities($result->PerformerPhoto); ?>"
-                                                        alt="image"></a></div>
+                                                href="performer-details.php?vhid=<?php echo htmlentities($result->id); ?>"><img
+                                                    src="<?php echo htmlentities($result->PerformerPhoto); ?>"
+                                                    alt="image"></a></div>
                                         <div class="recent_post_title"><a
-                                                    href="performer-details.php?vhid=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->CategoryName); ?>
+                                                href="performer-details.php?vhid=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->CategoryName); ?>
                                                 , <?php echo htmlentities($result->FullName); ?></a>
                                             <p class="widget_price">
                                                 BDT<?php echo htmlentities($result->PerformanceCost); ?> Per Day</p>

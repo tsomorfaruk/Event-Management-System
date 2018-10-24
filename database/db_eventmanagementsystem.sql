@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.7.1
+-- version 4.5.1
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 06, 2017 at 08:10 PM
--- Server version: 5.6.20
--- PHP Version: 5.5.15
+-- Generation Time: Oct 06, 2018 at 08:13 AM
+-- Server version: 10.1.19-MariaDB
+-- PHP Version: 7.0.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,10 +14,10 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `carrental`
+-- Database: `db_eventmanagementsystem`
 --
 
 -- --------------------------------------------------------
@@ -26,12 +26,12 @@ SET time_zone = "+00:00";
 -- Table structure for table `admin`
 --
 
-CREATE TABLE IF NOT EXISTS `admin` (
-`id` int(11) NOT NULL,
+CREATE TABLE `admin` (
+  `id` int(11) NOT NULL,
   `UserName` varchar(100) NOT NULL,
   `Password` varchar(100) NOT NULL,
   `updationDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `admin`
@@ -46,27 +46,30 @@ INSERT INTO `admin` (`id`, `UserName`, `Password`, `updationDate`) VALUES
 -- Table structure for table `tblbooking`
 --
 
-CREATE TABLE IF NOT EXISTS `tblbooking` (
-`id` int(11) NOT NULL,
-  `userEmail` varchar(100) DEFAULT NULL,
-  `VehicleId` int(11) DEFAULT NULL,
-  `FromDate` varchar(20) DEFAULT NULL,
-  `ToDate` varchar(20) DEFAULT NULL,
-  `message` varchar(255) DEFAULT NULL,
-  `Status` int(11) DEFAULT NULL,
-  `PostingDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+CREATE TABLE `tblbooking` (
+  `BookingId` int(10) NOT NULL,
+  `ClientName` varchar(255) NOT NULL,
+  `ClientEmail` varchar(255) NOT NULL,
+  `ClientContactNumber` int(12) NOT NULL,
+  `ClientAddress` varchar(255) NOT NULL,
+  `ClientCity` varchar(255) NOT NULL,
+  `ClientNid` varchar(255) NOT NULL,
+  `ClientAccNumber` varchar(255) NOT NULL,
+  `ClientAccPass` varchar(255) NOT NULL,
+  `PerformerId` int(10) NOT NULL,
+  `PerformerName` varchar(255) NOT NULL,
+  `PerformanceDate` varchar(255) NOT NULL,
+  `DateQuantity` int(10) NOT NULL,
+  `PerformanceCost` int(10) NOT NULL,
+  `BookingDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblbooking`
 --
 
-INSERT INTO `tblbooking` (`id`, `userEmail`, `VehicleId`, `FromDate`, `ToDate`, `message`, `Status`, `PostingDate`) VALUES
-(1, 'test@gmail.com', 2, '22/06/2017', '25/06/2017', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco', 1, '2017-06-19 20:15:43'),
-(2, 'test@gmail.com', 3, '30/06/2017', '02/07/2017', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco', 2, '2017-06-26 20:15:43'),
-(3, 'test@gmail.com', 4, '02/07/2017', '07/07/2017', 'Lorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ', 0, '2017-06-26 21:10:06'),
-(4, 'test1@gmail.com', 1, '11/07/2017', '12/07/2018', 'ddddddddddd', 0, '2017-06-29 18:20:45'),
-(5, 'php@gmail.com', 6, '11/07/2017', '12/07/2017', 'i want to hire this taxi for few hours', 1, '2017-07-05 11:09:18');
+INSERT INTO `tblbooking` (`BookingId`, `ClientName`, `ClientEmail`, `ClientContactNumber`, `ClientAddress`, `ClientCity`, `ClientNid`, `ClientAccNumber`, `ClientAccPass`, `PerformerId`, `PerformerName`, `PerformanceDate`, `DateQuantity`, `PerformanceCost`, `BookingDate`) VALUES
+(5, 'Nahid', 'nahid@zahid.com', 1710101010, 'dfglliou kiuo', 'Dhaka', '2551346895875495', '105.119.48734', '2555', 7, 'Omor Faruk', '10/06/2018, 10/07/2018', 2, 4000, '2018-10-06 06:00:44');
 
 -- --------------------------------------------------------
 
@@ -74,19 +77,19 @@ INSERT INTO `tblbooking` (`id`, `userEmail`, `VehicleId`, `FromDate`, `ToDate`, 
 -- Table structure for table `tblbrands`
 --
 
-CREATE TABLE IF NOT EXISTS `tblbrands` (
-`id` int(11) NOT NULL,
+CREATE TABLE `tblbrands` (
+  `id` int(11) NOT NULL,
   `BrandName` varchar(120) NOT NULL,
   `CreationDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `UpdationDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblbrands`
 --
 
 INSERT INTO `tblbrands` (`id`, `BrandName`, `CreationDate`, `UpdationDate`) VALUES
-(1, 'Maruti', '2017-06-18 16:24:34', '2017-06-19 06:42:23'),
+(1, 'Photographer', '2017-06-18 16:24:34', '2018-09-25 07:18:56'),
 (2, 'BMW', '2017-06-18 16:24:50', NULL),
 (3, 'Audi', '2017-06-18 16:25:03', NULL),
 (4, 'Nissan', '2017-06-18 16:25:13', NULL),
@@ -97,15 +100,54 @@ INSERT INTO `tblbrands` (`id`, `BrandName`, `CreationDate`, `UpdationDate`) VALU
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tblcart`
+--
+
+CREATE TABLE `tblcart` (
+  `CartId` int(11) NOT NULL,
+  `SessionId` varchar(255) NOT NULL,
+  `PerformerId` int(10) NOT NULL,
+  `PerformerName` varchar(255) NOT NULL,
+  `PerformanceCost` int(10) NOT NULL,
+  `PerformanceDate` varchar(255) NOT NULL,
+  `DateQuantity` int(10) NOT NULL,
+  `PerformerPhoto` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblcategories`
+--
+
+CREATE TABLE `tblcategories` (
+  `CategoryId` int(10) NOT NULL,
+  `CategoryName` varchar(255) DEFAULT NULL,
+  `Created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tblcategories`
+--
+
+INSERT INTO `tblcategories` (`CategoryId`, `CategoryName`, `Created_at`, `Updated_at`) VALUES
+(1, 'Photographer', '2018-09-25 07:06:31', '2018-09-25 07:06:31'),
+(2, 'Singer', '2018-09-25 07:09:07', '2018-09-25 07:09:07'),
+(4, 'Dancer', '2018-09-25 07:12:16', '2018-09-25 07:12:16');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tblcontactusinfo`
 --
 
-CREATE TABLE IF NOT EXISTS `tblcontactusinfo` (
-`id` int(11) NOT NULL,
+CREATE TABLE `tblcontactusinfo` (
+  `id` int(11) NOT NULL,
   `Address` tinytext,
   `EmailId` varchar(255) DEFAULT NULL,
   `ContactNo` char(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcontactusinfo`
@@ -120,15 +162,15 @@ INSERT INTO `tblcontactusinfo` (`id`, `Address`, `EmailId`, `ContactNo`) VALUES
 -- Table structure for table `tblcontactusquery`
 --
 
-CREATE TABLE IF NOT EXISTS `tblcontactusquery` (
-`id` int(11) NOT NULL,
+CREATE TABLE `tblcontactusquery` (
+  `id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `EmailId` varchar(120) DEFAULT NULL,
   `ContactNumber` char(11) DEFAULT NULL,
   `Message` longtext,
   `PostingDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` int(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcontactusquery`
@@ -143,12 +185,12 @@ INSERT INTO `tblcontactusquery` (`id`, `name`, `EmailId`, `ContactNumber`, `Mess
 -- Table structure for table `tblpages`
 --
 
-CREATE TABLE IF NOT EXISTS `tblpages` (
-`id` int(11) NOT NULL,
+CREATE TABLE `tblpages` (
+  `id` int(11) NOT NULL,
   `PageName` varchar(255) DEFAULT NULL,
   `type` varchar(255) NOT NULL DEFAULT '',
   `detail` longtext NOT NULL
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblpages`
@@ -166,11 +208,11 @@ INSERT INTO `tblpages` (`id`, `PageName`, `type`, `detail`) VALUES
 -- Table structure for table `tblsubscribers`
 --
 
-CREATE TABLE IF NOT EXISTS `tblsubscribers` (
-`id` int(11) NOT NULL,
+CREATE TABLE `tblsubscribers` (
+  `id` int(11) NOT NULL,
   `SubscriberEmail` varchar(120) DEFAULT NULL,
   `PostingDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblsubscribers`
@@ -185,13 +227,13 @@ INSERT INTO `tblsubscribers` (`id`, `SubscriberEmail`, `PostingDate`) VALUES
 -- Table structure for table `tbltestimonial`
 --
 
-CREATE TABLE IF NOT EXISTS `tbltestimonial` (
-`id` int(11) NOT NULL,
+CREATE TABLE `tbltestimonial` (
+  `id` int(11) NOT NULL,
   `UserEmail` varchar(100) NOT NULL,
   `Testimonial` mediumtext NOT NULL,
   `PostingDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` int(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbltestimonial`
@@ -208,31 +250,42 @@ INSERT INTO `tbltestimonial` (`id`, `UserEmail`, `Testimonial`, `PostingDate`, `
 -- Table structure for table `tblusers`
 --
 
-CREATE TABLE IF NOT EXISTS `tblusers` (
-`id` int(11) NOT NULL,
+CREATE TABLE `tblusers` (
+  `id` int(11) NOT NULL,
   `FullName` varchar(120) DEFAULT NULL,
+  `PerformerCategoryId` int(10) DEFAULT NULL,
+  `FatherName` varchar(120) DEFAULT NULL,
+  `MotherName` varchar(120) DEFAULT NULL,
   `EmailId` varchar(100) DEFAULT NULL,
   `Password` varchar(100) DEFAULT NULL,
   `ContactNo` char(11) DEFAULT NULL,
   `dob` varchar(100) DEFAULT NULL,
   `Address` varchar(255) DEFAULT NULL,
   `City` varchar(100) DEFAULT NULL,
-  `Country` varchar(100) DEFAULT NULL,
+  `PerformanceCost` int(10) DEFAULT NULL,
+  `PerformerPhoto` varchar(255) NOT NULL,
+  `NidPhoto` varchar(255) NOT NULL,
+  `Video` varchar(255) NOT NULL,
+  `Activation` varchar(10) DEFAULT NULL,
+  `PublicationStatus` varchar(15) DEFAULT NULL,
   `RegDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `UpdationDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblusers`
 --
 
-INSERT INTO `tblusers` (`id`, `FullName`, `EmailId`, `Password`, `ContactNo`, `dob`, `Address`, `City`, `Country`, `RegDate`, `UpdationDate`) VALUES
-(1, 'Anuj Kumar', 'demo@gmail.com', 'f925916e2754e5e03f75dd58a5733251', '2147483647', NULL, NULL, NULL, NULL, '2017-06-17 19:59:27', '2017-06-26 21:02:58'),
-(2, 'AK', 'anuj@gmail.com', 'f925916e2754e5e03f75dd58a5733251', '8285703354', NULL, NULL, NULL, NULL, '2017-06-17 20:00:49', '2017-06-26 21:03:09'),
-(3, 'Anuj Kumar', 'webhostingamigo@gmail.com', 'f09df7868d52e12bba658982dbd79821', '09999857868', '03/02/1990', 'New Delhi', 'New Delhi', 'New Delhi', '2017-06-17 20:01:43', '2017-06-17 21:07:41'),
-(4, 'Anuj Kumar', 'test@gmail.com', '5c428d8875d2948607f3e3fe134d71b4', '9999857868', '', 'New Delhi', 'Delhi', 'Delhi', '2017-06-17 20:03:36', '2017-06-26 19:18:14'),
-(5, 'test', 'test1@gmail.com', '827ccb0eea8a706c4c34a16891f84e7b', '9015501898', NULL, NULL, NULL, NULL, '2017-06-29 18:19:08', NULL),
-(6, 'php', 'php@gmail.com', '202cb962ac59075b964b07152d234b70', '9015501898', NULL, NULL, NULL, NULL, '2017-07-05 11:06:55', '2017-07-05 11:08:02');
+INSERT INTO `tblusers` (`id`, `FullName`, `PerformerCategoryId`, `FatherName`, `MotherName`, `EmailId`, `Password`, `ContactNo`, `dob`, `Address`, `City`, `PerformanceCost`, `PerformerPhoto`, `NidPhoto`, `Video`, `Activation`, `PublicationStatus`, `RegDate`, `UpdationDate`) VALUES
+(1, 'Anuj Kumar', 0, NULL, NULL, 'demo@gmail.com', 'f925916e2754e5e03f75dd58a5733251', '2147483647', NULL, NULL, NULL, NULL, '', '', '', NULL, NULL, '2017-06-17 19:59:27', '2017-06-26 21:02:58'),
+(2, 'AK', 0, NULL, NULL, 'anuj@gmail.com', 'f925916e2754e5e03f75dd58a5733251', '8285703354', NULL, NULL, NULL, NULL, '', '', '', NULL, NULL, '2017-06-17 20:00:49', '2017-06-26 21:03:09'),
+(3, 'Anuj Kumar', 0, NULL, NULL, 'webhostingamigo@gmail.com', 'f09df7868d52e12bba658982dbd79821', '09999857868', '03/02/1990', 'New Delhi', 'New Delhi', NULL, '', '', '', NULL, NULL, '2017-06-17 20:01:43', '2017-06-17 21:07:41'),
+(4, 'Anuj Kumar', 0, NULL, NULL, 'test@gmail.com', '5c428d8875d2948607f3e3fe134d71b4', '9999857868', '', 'New Delhi', 'Delhi', NULL, '', '', '', NULL, NULL, '2017-06-17 20:03:36', '2017-06-26 19:18:14'),
+(5, 'test', 0, NULL, NULL, 'test1@gmail.com', '827ccb0eea8a706c4c34a16891f84e7b', '9015501898', NULL, NULL, NULL, NULL, '', '', '', NULL, NULL, '2017-06-29 18:19:08', NULL),
+(6, 'php', 0, NULL, NULL, 'php@gmail.com', '202cb962ac59075b964b07152d234b70', '9015501898', NULL, NULL, NULL, NULL, '', '', '', NULL, NULL, '2017-07-05 11:06:55', '2017-07-05 11:08:02'),
+(7, 'Omor Faruk', 1, 'Abubakkar', 'Fatema', 'a@b.com', '733d7be2196ff70efaf6913fc8bdcabf', '01612345678', '27/12/1995', '798, South Dania', 'Dhaka', 2000, 'assets/uploads/CD.NM. 16844....jpg', 'assets/uploads/20140826_191049.jpg', 'assets/uploads/---Aguner pahar.mp4', 'Active', 'Published', '2018-09-21 04:19:06', '2018-09-29 00:53:52'),
+(8, 'Shah Mahmud', 1, '', '', 'b@b.com', '83b4ef5ae4bb360c96628aecda974200', '01928391314', '', '', '', 2000, '', '', '', 'Inactive', 'Published', '2018-09-26 04:02:01', '2018-09-29 13:33:45'),
+(9, 'Nazmul', 2, 'Jani na', 'Doesnot know', 'c@b.com', '827ccb0eea8a706c4c34a16891f84e7b', '01712345678', '12/12/1993', 'Dhanmondi', 'Dhaka', 1500, 'assets/uploads/diu5.jpg', 'assets/uploads/diu4.jpg', 'assets/uploads/Facebook_3.mp4', 'Active', 'Published', '2018-09-28 13:49:11', NULL);
 
 -- --------------------------------------------------------
 
@@ -240,8 +293,8 @@ INSERT INTO `tblusers` (`id`, `FullName`, `EmailId`, `Password`, `ContactNo`, `d
 -- Table structure for table `tblvehicles`
 --
 
-CREATE TABLE IF NOT EXISTS `tblvehicles` (
-`id` int(11) NOT NULL,
+CREATE TABLE `tblvehicles` (
+  `id` int(11) NOT NULL,
   `VehiclesTitle` varchar(150) DEFAULT NULL,
   `VehiclesBrand` int(11) DEFAULT NULL,
   `VehiclesOverview` longtext,
@@ -268,7 +321,7 @@ CREATE TABLE IF NOT EXISTS `tblvehicles` (
   `LeatherSeats` int(11) DEFAULT NULL,
   `RegDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `UpdationDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblvehicles`
@@ -290,61 +343,73 @@ INSERT INTO `tblvehicles` (`id`, `VehiclesTitle`, `VehiclesBrand`, `VehiclesOver
 -- Indexes for table `admin`
 --
 ALTER TABLE `admin`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tblbooking`
 --
 ALTER TABLE `tblbooking`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`BookingId`);
 
 --
 -- Indexes for table `tblbrands`
 --
 ALTER TABLE `tblbrands`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tblcart`
+--
+ALTER TABLE `tblcart`
+  ADD PRIMARY KEY (`CartId`);
+
+--
+-- Indexes for table `tblcategories`
+--
+ALTER TABLE `tblcategories`
+  ADD PRIMARY KEY (`CategoryId`);
 
 --
 -- Indexes for table `tblcontactusinfo`
 --
 ALTER TABLE `tblcontactusinfo`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tblcontactusquery`
 --
 ALTER TABLE `tblcontactusquery`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tblpages`
 --
 ALTER TABLE `tblpages`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tblsubscribers`
 --
 ALTER TABLE `tblsubscribers`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbltestimonial`
 --
 ALTER TABLE `tbltestimonial`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tblusers`
 --
 ALTER TABLE `tblusers`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tblvehicles`
 --
 ALTER TABLE `tblvehicles`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -354,52 +419,62 @@ ALTER TABLE `tblvehicles`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `tblbooking`
 --
 ALTER TABLE `tblbooking`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `BookingId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `tblbrands`
 --
 ALTER TABLE `tblbrands`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+--
+-- AUTO_INCREMENT for table `tblcart`
+--
+ALTER TABLE `tblcart`
+  MODIFY `CartId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+--
+-- AUTO_INCREMENT for table `tblcategories`
+--
+ALTER TABLE `tblcategories`
+  MODIFY `CategoryId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `tblcontactusinfo`
 --
 ALTER TABLE `tblcontactusinfo`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `tblcontactusquery`
 --
 ALTER TABLE `tblcontactusquery`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `tblpages`
 --
 ALTER TABLE `tblpages`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT for table `tblsubscribers`
 --
 ALTER TABLE `tblsubscribers`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `tbltestimonial`
 --
 ALTER TABLE `tbltestimonial`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `tblusers`
 --
 ALTER TABLE `tblusers`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `tblvehicles`
 --
 ALTER TABLE `tblvehicles`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
