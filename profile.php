@@ -14,6 +14,7 @@ if (strlen($_SESSION['login']) == 0) {
         $dob = $_POST['dob'];
         $adress = $_POST['address'];
         $city = $_POST['city'];
+        $overview = $_POST['overview'];
         $performancecost = $_POST['performancecost'];
         $tmp_performerphoto = $_FILES['performerphoto']['tmp_name'];
         $performerphoto = $_FILES['performerphoto']['name'];
@@ -52,7 +53,7 @@ if (strlen($_SESSION['login']) == 0) {
         $movevideo ='assets/uploads/'.$video;
         $email = $_SESSION['login'];
         $sql = "update tblusers set FullName=:name,PerformerCategoryId=:categoryid,FatherName=:fathername,MotherName=:mothername,ContactNo=:mobileno,dob=:dob,Address=:adress,City=:city,PerformanceCost=:performancecost
-        ,PerformerPhoto=:performerphotopath,NidPhoto=:nidphotopath,Video=:videopath where EmailId=:email";
+        ,PerformerPhoto=:performerphotopath,NidPhoto=:nidphotopath,Video=:videopath,Overview=:overview where EmailId=:email";
         $query = $dbh->prepare($sql);
         $query->bindParam(':name', $name, PDO::PARAM_STR);
         $query->bindParam(':categoryid', $categoryid, PDO::PARAM_STR);
@@ -61,6 +62,7 @@ if (strlen($_SESSION['login']) == 0) {
         $query->bindParam(':mobileno', $mobileno, PDO::PARAM_STR);
         $query->bindParam(':dob', $dob, PDO::PARAM_STR);
         $query->bindParam(':adress', $adress, PDO::PARAM_STR);
+        $query->bindParam(':overview', $overview, PDO::PARAM_STR);
         $query->bindParam(':city', $city, PDO::PARAM_STR);
         $query->bindParam(':performancecost', $performancecost, PDO::PARAM_STR);
         $query->bindParam(':performerphotopath', $performerphotopath, PDO::PARAM_STR);
@@ -346,6 +348,11 @@ if (strlen($_SESSION['login']) == 0) {
                                         <option value="Tangail">Tangail</option>
                                         <option value="Thakurgaon">Thakurgaon</option>
                                     </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Overview</label>
+                                    <textarea class="form-control white_bg" name="overview"
+                                              rows="4" placeholder="Write something about your career"><?php echo htmlentities($result->Overview); ?></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Demand for Performance</label>

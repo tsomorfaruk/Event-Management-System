@@ -12,8 +12,7 @@ if (isset($_POST['confirmbooking'])) {
     $query->execute();
     $results = $query->fetchAll(PDO::FETCH_OBJ);
     if ($query->rowCount() > 0) {
-        foreach ($results as $result)
-        {
+        foreach ($results as $result) {
             $performerid = $result->PerformerId;
             $performername = $result->PerformerName;
             $performancecost = $result->PerformanceCost;
@@ -27,10 +26,8 @@ if (isset($_POST['confirmbooking'])) {
     $nid = $_POST['nid'];
     $adress = $_POST['address'];
     $city = $_POST['city'];
-    $accnumber = $_POST['accnumber'];
-    $accpass = $_POST['accpass'];
-    $sql = "INSERT INTO tblbooking(ClientName,ClientEmail,ClientContactNumber,ClientAddress,ClientCity,ClientNid,ClientAccNumber,ClientAccPass,PerformerId,PerformerName,PerformanceDate,DateQuantity,PerformanceCost) 
-                    VALUES(:name,:emailid,:mobileno,:address,:city,:nid,:accnumber,:accpass,:performerid,:performername,:performancedate,:datequantity,:performancecost)";
+    $sql = "INSERT INTO tblbooking(ClientName,ClientEmail,ClientContactNumber,ClientAddress,ClientCity,ClientNid,PerformerId,PerformerName,PerformanceDate,DateQuantity,PerformanceCost) 
+                    VALUES(:name,:emailid,:mobileno,:address,:city,:nid,:performerid,:performername,:performancedate,:datequantity,:performancecost)";
     $query = $dbh->prepare($sql);
     $query->bindParam(':name', $name, PDO::PARAM_STR);
     $query->bindParam(':emailid', $emailid, PDO::PARAM_STR);
@@ -38,8 +35,6 @@ if (isset($_POST['confirmbooking'])) {
     $query->bindParam(':address', $adress, PDO::PARAM_STR);
     $query->bindParam(':city', $city, PDO::PARAM_STR);
     $query->bindParam(':nid', $nid, PDO::PARAM_STR);
-    $query->bindParam(':accnumber', $accnumber, PDO::PARAM_STR);
-    $query->bindParam(':accpass', $accpass, PDO::PARAM_STR);
     $query->bindParam(':performerid', $performerid, PDO::PARAM_STR);
     $query->bindParam(':performername', $performername, PDO::PARAM_STR);
     $query->bindParam(':performancedate', $performancedate, PDO::PARAM_STR);
@@ -47,8 +42,7 @@ if (isset($_POST['confirmbooking'])) {
     $query->bindParam(':performancecost', $performancecost, PDO::PARAM_STR);
     $query->execute();
     $lastInsertId = $dbh->lastInsertId();
-    if($lastInsertId)
-    {
+    if ($lastInsertId) {
         $sql = "delete from tblcart  WHERE SessionId=:sessionid";
         $query = $dbh->prepare($sql);
         $query->bindParam(':sessionid', $sessionid, PDO::PARAM_STR);
@@ -111,18 +105,12 @@ if (isset($_POST['confirmbooking'])) {
 <!-- /Header -->
 
 
-
 <!--Listing-detail-->
 <section class="user_profile inner_pages">
     <div class="container">
         <div class="row">
-            <div class="col-md-3 col-sm-3">
-                <?php include('includes/sidebar.php'); ?>
-                <div class="col-md-6 col-sm-8">
+                <div class="col-md-6">
                     <div class="profile_wrap">
-                        <h5 class="uppercase underline">Genral Settings</h5>
-                            <div class="succWrap"><strong>SUCCESS</strong>:
-                            </div>
                         <form method="post">
                             <div class="form-group">
                                 <label class="control-label">Full Name</label>
@@ -147,7 +135,8 @@ if (isset($_POST['confirmbooking'])) {
 
                             <div class="form-group">
                                 <label class="control-label">Your Full Address</label>
-                                <textarea class="form-control white_bg" name="address" placeholder="Village, Sub-District, District"
+                                <textarea class="form-control white_bg" name="address"
+                                          placeholder="Village, Sub-District, District"
                                           rows="4"></textarea>
                             </div>
                             <div class="form-group">
@@ -221,14 +210,12 @@ if (isset($_POST['confirmbooking'])) {
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="control-label">Account Number</label>
-                                <input class="form-control white_bg" name="accnumber"
-                                       type="text" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Account Pin Number</label>
-                                <input class="form-control white_bg" name="accpass"
-                                       type="text" required>
+                                <input type="radio" name="payment" value="bkash">
+                                <img height="50" width="60" src="assets/images/bkash.png">
+                                <input type="radio" name="payment" value="rocket">
+                                <img height="50" width="60" src="assets/images/rocket.png">
+                                <input type="radio" name="payment" value="mastercard">
+                                <img height="50" width="60" src="assets/images/mastercard.png">
                             </div>
                             <div class="form-group">
                                 <button id="insert" type="submit" name="confirmbooking" class="btn">Confirm <span
@@ -239,7 +226,6 @@ if (isset($_POST['confirmbooking'])) {
                     </div>
                 </div>
             </div>
-        </div>
 </section>
 <!--/Listing-detail-->
 

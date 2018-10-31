@@ -6,14 +6,16 @@ if (strlen($_SESSION['login']) == 0) {
     header('location:index.php');
 } else {
     if (isset($_POST['changeactive'])) {
-        $activationstatus = $_POST['activation-status'];
-        $email = $_SESSION['login'];
-        $sql = "update tblusers set Activation=:activationstatus where EmailId=:email";
+        $fromcalender =$_POST['fromcalendar'];
+        $tocalender = $_POST['tocalendar'];
+        $userid = $_POST['userid'];
+        $sql = "INSERT INTO tblactivationstatus(PerformerId,FromInactive,ToInactive) VALUES(:pid,:fromcalender,:tocalender)";
         $query = $dbh->prepare($sql);
-        $query->bindParam(':activationstatus', $activationstatus, PDO::PARAM_STR);
-        $query->bindParam(':email', $email, PDO::PARAM_STR);
+        $query->bindParam(':pid', $userid, PDO::PARAM_STR);
+        $query->bindParam(':fromcalender', $fromcalender, PDO::PARAM_STR);
+        $query->bindParam(':tocalender', $tocalender, PDO::PARAM_STR);
         $query->execute();
-        $msg = "Activation Status Updated Successfully";
+        $msg = "Activation Status Set Successfully";
     }
 
     ?>
@@ -37,6 +39,7 @@ if (strlen($_SESSION['login']) == 0) {
         <link href="assets/css/slick.css" rel="stylesheet">
         <!--bootstrap-slider -->
         <link href="assets/css/bootstrap-slider.min.css" rel="stylesheet">
+        <link href="assets/js/jquery-ui.css" rel="stylesheet">
         <!--FontAwesome Font Style -->
         <link href="assets/css/font-awesome.min.css" rel="stylesheet">
 
@@ -145,40 +148,60 @@ if (strlen($_SESSION['login']) == 0) {
                         <div class="col-md-6 col-sm-8">
                             <div class="profile_wrap">
                                 <h5 class="uppercase underline">Activation Status</h5>
+
+                                    <?php
+                                    $pid = $result->id;
+                                    $sql = "SELECT * FROM tblactivationstatus WHERE PerformerId=:performerid order by id desc LIMIT 1";
+                                    $query = $dbh->prepare($sql);
+                                    $query->bindParam(':performerid', $pid, PDO::PARAM_STR);
+                                    $query->execute();
+                                    $results = $query->fetchAll(PDO::FETCH_OBJ);
+                                    if ($query->rowCount() > 0) {
+                                        foreach ($results as $result)
+                                        {
+                                            $frominactive = date('d-m-Y',strtotime($result->FromInactive));
+                                            $toinactive = date('d-m-Y',strtotime($result->ToInactive));
+
+                                            date_default_timezone_set('Asia/Dhaka');
+                                            $timezone = date_default_timezone_get();
+                                            if (strtotime($timezone)>=strtotime($frominactive) & strtotime($timezone)<=strtotime($toinactive))
+                                            {
+                                                ?>
+                                                <div class="widget_heading">
+                                                    <h5 style="color: whitesmoke; background-color: #f73838; text-align: center ">INACTIVE</h5>
+                                                    <p>You are InActive from <?php echo $frominactive;?> to <?php echo $toinactive;?></p>
+                                                </div>
+                                                <?php
+                                            }
+                                            else
+                                            {
+                                                ?>
+                                                <div class="form-group">
+                                                    <h5 style="color: black; background-color: #6be83a; text-align: center ">Now You are Active</h5>
+                                                </div>
+                                                <?php
+                                            }
+                                        }
+                                    }
+
+                                    ?>
                                 <?php
                                 if ($msg) {
                                     ?>
                                     <div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?>
                                     </div><?php } ?>
-                                <form method="post" enctype="multipart/form-data" multiple>
-
+                                <form method="post">
+                                    <input type="hidden" name="userid" value="<?php echo $result->id;?>">
                                     <div class="form-group">
-                                        <label class="control-label">Current Activation Status</label>
-                                        <h3 class="form-control white_bg"><?php echo htmlentities($result->Activation)?></h3>
+                                        <input type="text" class="form-control" placeholder="InActive From" name="fromcalendar"
+                                               id="fromcalender"/>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label">Change Activation Status</label>
-                                        <select name="activation-status">
-                                            <option value="<?php echo htmlentities($result->Activation)?>"><?php echo htmlentities($result->Activation)?></option>
-                                            <?php
-                                            if ($result->Activation == "Inactive"){?>
-                                                <option value="Active">Active</option>
-                                            <?php
-                                            }
-                                            else
-                                                {?>
-                                                   <option value="Inactive">Inactive</option>
-                                                <?php
-                                                }
-                                            ?>
-                                        </select>
+                                        <input type="text" class="form-control" placeholder="InActive To" name="tocalendar"
+                                               id="tocalender"/>
                                     </div>
-
                                     <div class="form-group">
-                                        <button id="insert" type="submit" name="changeactive" class="btn">Change Activation Status
-                                            <span
-                                                class="angle_arrow"><i class="fa fa-angle-right"
-                                                                       aria-hidden="true"></i></span></button>
+                                        <button class="btn" name="changeactive">Add to Cart</button>
                                     </div>
                                 </form>
                             </div>
@@ -187,42 +210,49 @@ if (strlen($_SESSION['login']) == 0) {
                 </div>
         </section>
         <!--/Profile-setting-->
-
-        <<!--Footer -->
-    <?php include('includes/footer.php'); ?>
-        <!-- /Footer-->
-
-        <!--Back to top-->
-        <div id="back-top" class="back-top"><a href="#top"><i class="fa fa-angle-up" aria-hidden="true"></i> </a></div>
-        <!--/Back to top-->
-
-        <!--Login-Form -->
-    <?php include('includes/login.php'); ?>
-        <!--/Login-Form -->
-
-        <!--Register-Form -->
-    <?php include('includes/registration.php'); ?>
-
-        <!--/Register-Form -->
-
-        <!--Forgot-password-Form -->
-    <?php include('includes/forgotpassword.php'); ?>
-        <!--/Forgot-password-Form -->
-
-        <!-- Scripts -->
-        <script src="assets/js/jquery.min.js"></script>
-        <script src="assets/js/bootstrap.min.js"></script>
-        <script src="assets/js/interface.js"></script>
-        <!--Switcher-->
-        <script src="assets/switcher/js/switcher.js"></script>
-        <!--bootstrap-slider-JS-->
-        <script src="assets/js/bootstrap-slider.min.js"></script>
-        <!--Slider-JS-->
-        <script src="assets/js/slick.min.js"></script>
-        <script src="assets/js/owl.carousel.min.js"></script>
-
-        </body>
-        </html>
         <?php
-
     } }}?>
+    <!--Footer -->
+    <?php include('includes/footer.php'); ?>
+    <!-- /Footer-->
+    <!--Back to top-->
+    <div id="back-top" class="back-top"><a href="#top"><i class="fa fa-angle-up" aria-hidden="true"></i> </a></div>
+    <!--/Back to top-->
+    <!--Login-Form -->
+    <?php include('includes/login.php'); ?>
+    <!--/Login-Form -->
+    <!--Register-Form -->
+    <?php include('includes/registration.php'); ?>
+    <!--/Register-Form -->
+    <!--Forgot-password-Form -->
+    <?php include('includes/forgotpassword.php'); ?>
+    <!--/Forgot-password-Form -->
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/interface.js"></script>
+    <!--Switcher-->
+    <script src="assets/switcher/js/switcher.js"></script>
+    <!--bootstrap-slider-JS-->
+    <script src="assets/js/bootstrap-slider.min.js"></script>
+    <!--Slider-JS-->
+    <script src="assets/js/slick.min.js"></script>
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <script type="text/javascript" src="assets/js/jquery.js"></script>
+    <script type="text/javascript" src="assets/js/jquery-ui.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $( "#fromcalender" ).datepicker({
+                minDate: 0,
+                maxDate: 90
+            });
+            $('#tocalender').datepicker({
+                minDate: 0,
+                maxDate: 90
+            });
+        });
+    </script>
+    </body>
+</html>

@@ -15,7 +15,7 @@ if (isset($_POST['signup'])) {
     else
     {
         $password = md5($_POST['password']);
-        $sql = "INSERT INTO  tblusers(FullName,PerformerCategoryId,EmailId,ContactNo,Password,PublicaionStatus) VALUES(:fname,:category,:email,:mobile,:password,:publicaionstatus)";
+        $sql = "INSERT INTO  tblusers(FullName,PerformerCategoryId,EmailId,Password,ContactNo,PublicationStatus) VALUES(:fname,:category,:email,:password,:mobile,:publicaionstatus)";
         $query = $dbh->prepare($sql);
         $query->bindParam(':fname', $fname, PDO::PARAM_STR);
         $query->bindParam(':category', $category, PDO::PARAM_STR);

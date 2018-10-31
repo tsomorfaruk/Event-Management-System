@@ -11,7 +11,7 @@ if (strlen($_SESSION['alogin']) == 0) {
         $fullname = $_POST['fullname'];
         $category = $_POST['category'];
         $mobile = $_POST['mobile'];
-        $activationstatus = $_POST['activationstatus'];
+        $overview = $_POST['overview'];
         $publicationstatus = $_POST['publicationstatus'];
         $address = $_POST['address'];
         $performancecost = $_POST['performancecost'];
@@ -22,7 +22,7 @@ if (strlen($_SESSION['alogin']) == 0) {
         $id = intval($_GET['id']);
 
         $sql = "update tblusers set FullName=:fullname,PerformerCategoryId=:category,FatherName=:fathername,MotherName=:mothername,ContactNo=:mobile,dob=:dob,Address=:address,City=:city,PerformanceCost=:performancecost
-        ,Activation=:activationstatus,PublicationStatus=:publicationstatus where id=:id";
+        ,Overview=:overview,PublicationStatus=:publicationstatus where id=:id";
         $query = $dbh->prepare($sql);
         $query->bindParam(':fullname', $fullname, PDO::PARAM_STR);
         $query->bindParam(':category', $category, PDO::PARAM_STR);
@@ -33,7 +33,7 @@ if (strlen($_SESSION['alogin']) == 0) {
         $query->bindParam(':address', $address, PDO::PARAM_STR);
         $query->bindParam(':city', $city, PDO::PARAM_STR);
         $query->bindParam(':performancecost', $performancecost, PDO::PARAM_STR);
-        $query->bindParam(':activationstatus', $activationstatus, PDO::PARAM_STR);
+        $query->bindParam(':overview', $overview, PDO::PARAM_STR);
         $query->bindParam(':publicationstatus', $publicationstatus, PDO::PARAM_STR);
         $query->bindParam(':id', $id, PDO::PARAM_STR);
         $query->execute();
@@ -169,29 +169,11 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Activation Status<span
+                                                        <label class="col-sm-2 control-label">Overview<span
                                                                     style="color:red">*</span></label>
                                                         <div class="col-sm-4">
-                                                            <select class="selectpicker" name="activationstatus">
-                                                                <option value="<?php echo htmlentities($result->Activation) ?>"><?php echo htmlentities($result->Activation) ?></option>
-                                                                <?php
-                                                                if ($result->Activation == "Inactive") {
-                                                                    ?>
-                                                                    <option value="Active">Active</option>
-                                                                    <?php
-                                                                } else if ($result->Activation == "Active") {
-                                                                    ?>
-                                                                    <option value="Inactive">Inactive</option>
-                                                                    <?php
-                                                                }
-                                                                else{
-                                                                    ?>
-                                                                    <option value="Active">Active</option>
-                                                                    <option value="Inactive">Inactive</option>
-                                                                    <?php
-                                                                }
-                                                                ?>
-                                                            </select>
+                                                                <textarea class="form-control white_bg" name="overview"
+                                                                          rows="4" placeholder="Write something about your career"><?php echo htmlentities($result->Overview); ?></textarea>
                                                         </div>
                                                         <label class="col-sm-2 control-label">Publication Status<span
                                                                     style="color:red">***</span></label>
@@ -240,7 +222,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                                     style="color:red">*</span></label>
                                                         <div class="col-sm-4">
                                                             <select class="selectpicker" name="city">
-                                                                <option value="<?php echo htmlentities($results->City); ?>"> <?php echo htmlentities($result->City); ?> </option>
+                                                                <option value="<?php echo htmlentities($result->City); ?>"> <?php echo htmlentities($result->City); ?> </option>
                                                                 <option value="Bagerhat">Bagerhat</option>
                                                                 <option value="Bandarban">Bandarban</option>
                                                                 <option value="Barguna">Barguna</option>

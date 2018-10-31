@@ -14,8 +14,7 @@ if (isset($_POST['cartresult'])) {
     $query->execute();
     $results = $query->fetchAll(PDO::FETCH_OBJ);
     if ($query->rowCount() > 0) {
-        foreach ($results as $result)
-        {
+        foreach ($results as $result) {
             $performername = $result->FullName;
             $perdayperformancecost = $result->PerformanceCost;
             $performerphoto = $result->PerformerPhoto;
@@ -112,10 +111,12 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
 $cnt = 1;
 if ($query->rowCount() > 0)
 {
-    foreach ($results as $result)
-    {
-        $_SESSION['categoryid'] = $result->CategoryId;
-    ?>
+foreach ($results
+
+         as $result)
+{
+$_SESSION['categoryid'] = $result->CategoryId;
+?>
 
     <section id="listing_img_slider">
         <div><img src="<?php echo htmlentities($result->PerformerPhoto); ?>" class="img-responsive" alt="image"
@@ -149,11 +150,6 @@ if ($query->rowCount() > 0)
                             <h5><?php echo htmlentities($result->id); ?></h5>
                             <p>Reg. no</p>
                         </li>
-                        <!--  <li> <i class="fa fa-cogs" aria-hidden="true"></i>
-              <h5><?php echo htmlentities($result->City); ?></h5>
-              <p>City</p>
-            </li>-->
-
                         <li><i class="fa fa-user-plus" aria-hidden="true"></i>
                             <h5><?php echo htmlentities($result->City); ?></h5>
                             <p>Performed</p>
@@ -170,20 +166,74 @@ if ($query->rowCount() > 0)
 
                             <li role="presentation"><a href="#accessories" aria-controls="accessories" role="tab"
                                                        data-toggle="tab">Performer's Skill</a></li>
+                            <li role="presentation"><a href="#testimonial" aria-controls="testimonial" role="tab"
+                                                       data-toggle="tab">Testimonial</a></li>
                         </ul>
 
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <!-- vehicle-overview -->
                             <div role="tabpanel" class="tab-pane active" id="vehicle-overview">
-
-                                <p><?php echo htmlentities($result->Address); ?></p>
+                                <p><?php echo htmlentities($result->Overview); ?></p>
                             </div>
-
-
                             <!-- Accessories -->
                             <div role="tabpanel" class="tab-pane" id="accessories">
                                 <!--Accessories-->
+                                <div>
+                                    <h3>Performance Video</h3>
+                                    <video height="320px" width="500px" src="<?php echo htmlentities($result->Video) ?>"
+                                           controls> Upload your Performance video
+                                    </video>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="testimonial">
+                                <!--Accessories-->
+                                <div>
+                                    <?php
+                                    $pid = $result->id;
+                                    $sql = "SELECT * from tbltestimonial where PerformerId = :pid order by id desc LIMIT 1";
+                                    $query = $dbh->prepare($sql);
+                                    $query->bindParam(':pid', $pid, PDO::PARAM_STR);
+                                    $query->execute();
+                                    $results = $query->fetchAll(PDO::FETCH_OBJ);
+                                    $cnt = 1;
+                                    if ($query->rowCount() > 0) {
+                                        foreach ($results as $result) {
+                                            ?>
+                                            <div>
+                                                <div>
+                                                    <img height="250px" width="500px"
+                                                         src="<?php echo $result->TestimonialImage1; ?>"
+                                                         alt="Image of testimonial(1)">
+                                                </div>
+                                                <div>
+                                                    <p><span><?php echo $result->TestimonialText1; ?></span></p>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>
+                                                    <img height="250px" width="500px"
+                                                         src="<?php echo $result->TestimonialImage2; ?>"
+                                                         alt="Image of testimonial(1)">
+                                                </div>
+                                                <div>
+                                                    <p><span><?php echo $result->TestimonialText2; ?></span></p>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>
+                                                    <img height="250px" width="500px"
+                                                         src="<?php echo $result->TestimonialImage3; ?>"
+                                                         alt="Image of testimonial(1)">
+                                                </div>
+                                                <div>
+                                                    <p><span><?php echo $result->TestimonialText3; ?></span></p>
+                                                </div>
+                                            </div>
+                                            <?php
+                                        }
+                                    } ?>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -203,8 +253,45 @@ if ($query->rowCount() > 0)
                 </div>
                 <div class="sidebar_widget">
                     <?php
-                    $activation = $result->Activation;
-                    if ($activation == 'Active') {
+                    $pid = $result->id;
+                    $sql = "SELECT * FROM tblactivationstatus WHERE PerformerId=:performerid order by id desc LIMIT 1";
+                    $query = $dbh->prepare($sql);
+                    $query->bindParam(':performerid', $pid, PDO::PARAM_STR);
+                    $query->execute();
+                    $results = $query->fetchAll(PDO::FETCH_OBJ);
+                    if ($query->rowCount() > 0) {
+                        foreach ($results as $result) {
+                            $frominactive = date('d-m-Y', strtotime($result->FromInactive));
+                            $toinactive = date('d-m-Y', strtotime($result->ToInactive));
+                            date_default_timezone_set('Asia/Dhaka');
+                            $timezone = date_default_timezone_get();
+                            if (strtotime($timezone) >= strtotime($frominactive) & strtotime($timezone) <= strtotime($toinactive)) {
+                                ?>
+                                <div class="widget_heading">
+                                    <h5 style="color: whitesmoke; background-color: #f73838; text-align: center ">
+                                        INACTIVE</h5>
+                                    <p>Performer In Active from <?php echo $frominactive; ?>
+                                        to <?php echo $toinactive; ?></p>
+                                </div>
+                                <?php
+                            } else {
+                                ?>
+                                <div class="form-group">
+                                    <h5 style="color: black; background-color: #6be83a; text-align: center ">ACTIVE</h5>
+                                </div>
+                                <form method="post">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Date" name="calendar"
+                                               id="calendar"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn" name="cartresult">Add to Cart</button>
+                                    </div>
+                                </form>
+                                <?php
+                            }
+                        }
+                    } else {
                         ?>
                         <div class="form-group">
                             <h5 style="color: black; background-color: #6be83a; text-align: center ">ACTIVE</h5>
@@ -219,15 +306,8 @@ if ($query->rowCount() > 0)
                             </div>
                         </form>
                         <?php
-                    } else {
-                        ?>
-                        <div class="widget_heading">
-                            <h5 style="color: whitesmoke; background-color: #f73838; text-align: center ">INACTIVE</h5>
-                        </div>
-                        <?php
                     }
                     ?>
-
                 </div>
             </aside>
             <?php }
@@ -244,7 +324,7 @@ if ($query->rowCount() > 0)
             <div class="row">
                 <?php
                 $categoryid = $_SESSION['categoryid'];
-                $sql = "SELECT tblusers.FullName,tblcategories.CategoryName,tblusers.PerformanceCost,tblusers.City,tblusers.id,tblusers.Address,tblusers.Video,tblvehicles.PerformerPhoto from tblusers join tblcategories on tblcategories.CategoryId=tblusers.PerformerCategoryId where tblusers.PerformerCategoryId=:categoryid";
+                $sql = "SELECT tblusers.FullName,tblcategories.CategoryName,tblusers.PerformanceCost,tblusers.City,tblusers.id,tblusers.Address,tblusers.PerformerPhoto from tblusers join tblcategories on tblcategories.CategoryId=tblusers.PerformerCategoryId where tblusers.PerformerCategoryId=:categoryid";
                 $query = $dbh->prepare($sql);
                 $query->bindParam(':categoryid', $categoryid, PDO::PARAM_STR);
                 $query->execute();
@@ -257,7 +337,7 @@ if ($query->rowCount() > 0)
                                 <div class="product-listing-img"><a
                                             href="performer-details.php?id=<?php echo htmlentities($result->id); ?>"><img
                                                 src="<?php echo htmlentities($result->PerformerPhoto); ?>"
-                                                class="img-responsive" alt="image"/> </a>
+                                                class="img-responsive"alt="image"/> </a>
                                 </div>
                                 <div class="product-listing-content">
                                     <h5>

@@ -5,23 +5,10 @@ include('includes/config.php');
 if (strlen($_SESSION['alogin']) == 0) {
     header('location:index.php');
 } else {
-    if (isset($_REQUEST['eid'])) {
-        $eid = intval($_GET['eid']);
-        $status = 1;
-        $sql = "UPDATE tblcontactusquery SET status=:status WHERE  id=:eid";
-        $query = $dbh->prepare($sql);
-        $query->bindParam(':status', $status, PDO::PARAM_STR);
-        $query->bindParam(':eid', $eid, PDO::PARAM_STR);
-        $query->execute();
-
-    }
-
 
     ?>
-
     <!doctype html>
     <html lang="en" class="no-js">
-
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,9 +16,7 @@ if (strlen($_SESSION['alogin']) == 0) {
         <meta name="description" content="">
         <meta name="author" content="">
         <meta name="theme-color" content="#3e454c">
-
-        <title>Event Management Portal |Admin Manage Queries </title>
-
+        <title>Event Management Portal |Admin Manage testimonials </title>
         <!-- Font awesome -->
         <link rel="stylesheet" href="css/font-awesome.min.css">
         <!-- Sandstone Bootstrap CSS -->
@@ -81,67 +66,47 @@ if (strlen($_SESSION['alogin']) == 0) {
                 <div class="row">
                     <div class="col-md-12">
 
-                        <h2 class="page-title">Manage Contact Us Queries</h2>
+                        <h2 class="page-title">Show Activate Status</h2>
 
                         <!-- Zero Configuration Table -->
                         <div class="panel panel-default">
-                            <div class="panel-heading">User queries</div>
+                            <div class="panel-heading">Activation Status Info</div>
                             <div class="panel-body">
                                 <table id="zctb" class="display table table-striped table-bordered table-hover"
                                        cellspacing="0" width="100%">
-                                    <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Contact No</th>
-                                        <th>Message</th>
-                                        <th>Posting date</th>
-                                        <th>Action</th>
+                                        <th>Performer Id</th>
+                                        <th>In Active From</th>
+                                        <th>In Active To</th>
                                     </tr>
-                                    </thead>
                                     <tbody>
-
-                                    <?php $sql = "SELECT * from  tblcontactusquery ";
+                                    <?php
+                                    $sql = "SELECT * from tblactivationstatus order by id desc";
                                     $query = $dbh->prepare($sql);
                                     $query->execute();
                                     $results = $query->fetchAll(PDO::FETCH_OBJ);
                                     $cnt = 1;
-                                    if ($query->rowCount() > 0) {
-                                        foreach ($results as $result) { ?>
+                                    if ($query->rowCount() > 0)
+                                    {
+                                        foreach ($results as $result)
+                                        {?>
                                             <tr>
-                                                <td><?php echo htmlentities($cnt); ?></td>
-                                                <td><?php echo htmlentities($result->name); ?></td>
-                                                <td><?php echo htmlentities($result->EmailId); ?></td>
-                                                <td><?php echo htmlentities($result->ContactNumber); ?></td>
-                                                <td><?php echo htmlentities($result->Message); ?></td>
-                                                <td><?php echo htmlentities($result->PostingDate); ?></td>
-                                                <?php if ($result->status == 1) {
-                                                    ?>
-                                                    <td>Read</td>
-                                                <?php } else { ?>
-
-                                                    <td>
-                                                        <a href="manage-conactusquery.php?eid=<?php echo htmlentities($result->id); ?>"
-                                                           onclick="return confirm('Do you really want to read')">Pending</a>
-                                                    </td>
-                                                <?php } ?>
+                                                <td><?php echo $cnt; ?></td>
+                                                <td><?php echo $result->PerformerId; ?></td>
+                                                <td><?php echo $result->FromInactive; ?></td>
+                                                <td><?php echo $result->ToInactive; ?></td>
                                             </tr>
                                             <?php $cnt = $cnt + 1;
                                         }
-                                    } ?>
-
+                                    }
+                                    ?>
                                     </tbody>
                                 </table>
-
-
                             </div>
                         </div>
-
-
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

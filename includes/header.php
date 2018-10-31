@@ -57,7 +57,6 @@
                                 $results = $query->fetchAll(PDO::FETCH_OBJ);
                                 if ($query->rowCount() > 0) {
                                     foreach ($results as $result) {
-
                                         echo htmlentities($result->FullName);
                                     }
                                 } ?><i class="fa fa-angle-down" aria-hidden="true"></i></a>
