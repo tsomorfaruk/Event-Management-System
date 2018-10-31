@@ -2,8 +2,7 @@
 session_start();
 include('includes/config.php');
 error_reporting(0);
-if (isset($_GET['del']))
-{
+if (isset($_GET['del'])) {
     $id = $_GET['del'];
     $sql = "delete from tblcart  WHERE CartId=:id";
     $query = $dbh->prepare($sql);
@@ -67,7 +66,6 @@ if (isset($_GET['del']))
 <!-- /Header -->
 
 
-
 <!--Listing-detail-->
 <section class="listing-detail">
     <div class="container">
@@ -88,22 +86,20 @@ if (isset($_GET['del']))
                 </thead>
                 <?php
                 $sql = "SELECT * FROM tblcart WHERE SessionId=:sessionid";
-                $query= $dbh -> prepare($sql);
-                $query-> bindParam(':sessionid', $sessionid, PDO::PARAM_STR);
-                $query-> execute();
-                $results=$query->fetchAll(PDO::FETCH_OBJ);
-                if($query->rowCount() > 0)
-                {
-                    $sum =0;
+                $query = $dbh->prepare($sql);
+                $query->bindParam(':sessionid', $sessionid, PDO::PARAM_STR);
+                $query->execute();
+                $results = $query->fetchAll(PDO::FETCH_OBJ);
+                if ($query->rowCount() > 0) {
+                    $sum = 0;
                     $i = 0;
-                    foreach ($results as $result)
-                    {
+                    foreach ($results as $result) {
                         ?>
                         <tr class="rem1">
                             <td class="invert-closeb">
                                 <div class="rem">
                                     <a href="checkout.php?del=<?php echo $result->CartId; ?>"
-                                       onclick="return confirm('Are you want to delete this');"class="close1">X</a>
+                                       onclick="return confirm('Are you want to delete this');" class="close1">X</a>
                                 </div>
                             </td>
                             <td class="invert-image" align="center"><img width="120px"
@@ -111,20 +107,20 @@ if (isset($_GET['del']))
                                                                          alt=" "
                                                                          class="img-responsive"/></td>
 
-                            <td class="invert"><?php echo $result->PerformerName;?></td>
-                            <td class="invert"><?php echo $result->PerformanceDate;?></td>
+                            <td class="invert"><?php echo $result->PerformerName; ?></td>
+                            <td class="invert"><?php echo $result->PerformanceDate; ?></td>
                             <td class="invert"><?php
 
                                 $datequantity = $result->DateQuantity;
-                                echo $datequantity;?></td>
+                                echo $datequantity; ?></td>
                             <td class="invert"><?php
                                 $cost = $result->PerformanceCost;
-                                echo $cost;?></td>
+                                echo $cost; ?></td>
                         </tr>
-                    <?php
+                        <?php
                         $sum = $sum + $cost;
                         $performer = $result->PerformerId;
-                        if ($performer){
+                        if ($performer) {
                             $i++;
                         }
                         $_SESSION['sum'] = $sum;
@@ -137,24 +133,16 @@ if (isset($_GET['del']))
         </div>
         <div class="checkout-left">
             <div class="checkout-right-basket animated wow slideInRight" data-wow-delay=".5s">
-                <a href="performer-list.php"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>Back To
+                <a href="performer-list.php"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>Back
+                    To
                     Shopping</a>
             </div>
             <div class="checkout-right-basket animated wow slideInRight" data-wow-delay=".5s">
-                <a href="booking-confirm.php">Confirm Booking     <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a>
-            </div>
-            <div class="checkout-left-basket animated wow slideInLeft" data-wow-delay=".5s">
-                <h4>Shopping basket</h4>
-                <ul>
-                    <li>fhte</li>
-                    <li>dsgv</li>
-                    <li>sdgvs</li>
-                </ul>
+                <a href="booking-confirm.php">Confirm Booking <span class="glyphicon glyphicon-menu-right"
+                                                                    aria-hidden="true"></span></a>
             </div>
             <div class="clearfix"></div>
-
-
-    </div>
+        </div>
 </section>
 <!--/Listing-detail-->
 

@@ -88,45 +88,56 @@ error_reporting(0);
                 </ul>
             </div>
             <!-- Recently Listed New Cars -->
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="resentnewcar">
-
-                    <?php $sql = "SELECT id,FullName,City,Activation from tblvehicles join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand";
+            <div class="similar_cars">
+                <div class="row">
+                    <?php
+                    $categoryid = $_SESSION['categoryid'];
+                    $sql = "SELECT tblusers.FullName,tblcategories.CategoryName,tblusers.PerformanceCost,tblusers.City,tblusers.id,tblusers.Address,tblusers.PerformerPhoto from tblusers join tblcategories on tblcategories.CategoryId=tblusers.PerformerCategoryId";
                     $query = $dbh->prepare($sql);
                     $query->execute();
                     $results = $query->fetchAll(PDO::FETCH_OBJ);
-                    $cnt = 1;
                     if ($query->rowCount() > 0) {
-                        foreach ($results as $result) {
-                            ?>
+                        foreach ($results as $result) { ?>
+                            <div class="col-md-3 grid_listing">
+                                <div class="product-listing-m gray-bg">
+                                    <div class="product-listing-img"><a
+                                                href="performer-details.php?id=<?php echo htmlentities($result->id); ?>"><img
+                                                    src="<?php echo htmlentities($result->PerformerPhoto); ?>"
+                                                    class="img-responsive" alt="image"/> </a>
+                                    </div>
+                                    <div class="product-listing-content">
+                                        <h5>
+                                            <a href="performer-details.php?id=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->CategoryName); ?>
+                                                , <?php echo htmlentities($result->FullName); ?></a></h5>
+                                        <p class="list-price">BDT<?php echo htmlentities($result->PerformanceCost); ?></p>
 
-                            <div class="col-list-3">
-                                <div class="recent-car-list">
-                                    <div class="car-info-box"><a
-                                                href="vehical-details.php?vhid=<?php echo htmlentities($result->id); ?>"><img
-                                                    src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage1); ?>"
-                                                    class="img-responsive" alt="image"></a>
-                                        <ul>
-                                            <!--  <li><i class="fa fa-car" aria-hidden="true"></i><?php echo htmlentities($result->FuelType); ?></li> -->
-                                            <li><i class="fa fa-calendar"
-                                                   aria-hidden="true"></i><?php echo htmlentities($result->ModelYear); ?>
-                                                reg
-                                            </li>
-                                            <li><i class="fa fa-user"
-                                                   aria-hidden="true"></i><?php echo htmlentities($result->SeatingCapacity); ?>
+                                        <ul class="features_list">
+
+                                            <li><i class="fa fa-user" aria-hidden="true"></i>
+                                                <?php
+                                                $id = $result->id;
+                                                $status = 1;
+                                                $sql = "SELECT * from tblbooking where PerformerId=:pid AND Status=:status";
+                                                $query = $dbh->prepare($sql);
+                                                $query->bindParam(':pid', $id, PDO::PARAM_STR);
+                                                $query->bindParam(':status', $status, PDO::PARAM_STR);
+                                                $query->execute();
+                                                $results = $query->fetchAll(PDO::FETCH_OBJ);
+                                                $cnt = 0;
+                                                if ($query->rowCount() > 0) {
+                                                    foreach ($results as $resul) {
+                                                        $cnt = $cnt + 1;
+                                                    }
+
+                                                }
+                                                echo $cnt; ?>
                                                 performed
                                             </li>
+                                            <li><i class="fa fa-calendar"
+                                                   aria-hidden="true"></i><?php echo htmlentities($id); ?> reg. no
+                                            </li>
+                                            <!--  <li><i class="fa fa-car" aria-hidden="true"></i><?php echo htmlentities($result->City); ?></li> -->
                                         </ul>
-                                    </div>
-                                    <div class="car-title-m">
-                                        <h6>
-                                            <a href="vehical-details.php?vhid=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->BrandName); ?>
-                                                , <?php echo htmlentities($result->VehiclesTitle); ?></a></h6>
-                                        <span class="price">BDT<?php echo htmlentities($result->PricePerDay); ?>
-                                            /Day</span>
-                                    </div>
-                                    <div class="inventory_info_m">
-                                        <p><?php echo substr($result->VehiclesOverview, 0, 70); ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -134,6 +145,7 @@ error_reporting(0);
                     } ?>
 
                 </div>
+            </div>
             </div>
         </div>
 </section>

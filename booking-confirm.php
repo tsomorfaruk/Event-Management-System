@@ -134,9 +134,9 @@ if (isset($_POST['confirmbooking'])) {
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label">Your Full Address</label>
+                                <label class="control-label">Event Address</label>
                                 <textarea class="form-control white_bg" name="address"
-                                          placeholder="Village, Sub-District, District"
+                                          placeholder="Give your event location"
                                           rows="4"></textarea>
                             </div>
                             <div class="form-group">
@@ -218,8 +218,8 @@ if (isset($_POST['confirmbooking'])) {
                                 <img height="50" width="60" src="assets/images/mastercard.png">
                             </div>
                             <div class="form-group">
-                                <button id="insert" type="submit" name="confirmbooking" class="btn">Confirm <span
-                                            class="angle_arrow"><i class="fa fa-angle-right"
+                                <button id="insert" type="submit" name="confirmbooking" class="btn" onclick="return confirm('Press Ok, We will send a mail with payment list.');">Confirm <span
+                                            class="angle_arrow" ><i class="fa fa-angle-right"
                                                                    aria-hidden="true"></i></span></button>
                             </div>
                         </form>

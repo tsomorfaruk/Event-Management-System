@@ -38,6 +38,39 @@ if (strlen($_SESSION['login']) == 0) {
         else{
             $nidphotopath = $_POST['oldnidphoto'];
         }
+        $performancephoto1 =$_FILES['performancephoto1']['name'];
+        $tmp_performancephoto1 = $_FILES['performancephoto1']['tmp_name'];
+        if ($performancephoto1){
+            $oldperformancephoto1path = $_POST['oldperformancephoto1'];
+            unlink($oldperformancephoto1path);
+            $moveperformancephoto1 = move_uploaded_file($tmp_performancephoto1,'assets/uploads/'.$performancephoto1);
+            $performancephoto1path ='assets/uploads/'.$performancephoto1;
+        }
+        else{
+            $performancephoto1path = $_POST['oldperformancephoto1'];
+        }
+        $performancephoto2 =$_FILES['performancephoto2']['name'];
+        $tmp_performancephoto2 = $_FILES['performancephoto2']['tmp_name'];
+        if ($performancephoto2){
+            $oldperformancephoto2path = $_POST['oldperformancephoto2'];
+            unlink($oldperformancephoto2path);
+            $moveperformancephoto2 = move_uploaded_file($tmp_performancephoto2,'assets/uploads/'.$performancephoto2);
+            $performancephoto2path ='assets/uploads/'.$performancephoto2;
+        }
+        else{
+            $performancephoto2path = $_POST['oldperformancephoto2'];
+        }
+        $performancephoto3 =$_FILES['performancephoto3']['name'];
+        $tmp_performancephoto3 = $_FILES['performancephoto3']['tmp_name'];
+        if ($performancephoto3){
+            $oldperformancephoto3path = $_POST['oldperformancephoto3'];
+            unlink($oldperformancephoto3path);
+            $moveperformancephoto3 = move_uploaded_file($tmp_performancephoto3,'assets/uploads/'.$performancephoto3);
+            $performancephoto3path ='assets/uploads/'.$performancephoto3;
+        }
+        else{
+            $performancephoto3path = $_POST['oldperformancephoto3'];
+        }
         $video = $_FILES['video']['name'];
         $tmp_video = $_FILES['video']['tmp_name'];
         if ($video){
@@ -53,7 +86,7 @@ if (strlen($_SESSION['login']) == 0) {
         $movevideo ='assets/uploads/'.$video;
         $email = $_SESSION['login'];
         $sql = "update tblusers set FullName=:name,PerformerCategoryId=:categoryid,FatherName=:fathername,MotherName=:mothername,ContactNo=:mobileno,dob=:dob,Address=:adress,City=:city,PerformanceCost=:performancecost
-        ,PerformerPhoto=:performerphotopath,NidPhoto=:nidphotopath,Video=:videopath,Overview=:overview where EmailId=:email";
+        ,PerformerPhoto=:performerphotopath,NidPhoto=:nidphotopath,PerformancePhoto1=:performancephoto1path,PerformancePhoto2=:performancephoto2path,PerformancePhoto3=:performancephoto3path,Video=:videopath,Overview=:overview where EmailId=:email";
         $query = $dbh->prepare($sql);
         $query->bindParam(':name', $name, PDO::PARAM_STR);
         $query->bindParam(':categoryid', $categoryid, PDO::PARAM_STR);
@@ -67,6 +100,9 @@ if (strlen($_SESSION['login']) == 0) {
         $query->bindParam(':performancecost', $performancecost, PDO::PARAM_STR);
         $query->bindParam(':performerphotopath', $performerphotopath, PDO::PARAM_STR);
         $query->bindParam(':nidphotopath', $nidphotopath, PDO::PARAM_STR);
+        $query->bindParam(':performancephoto1path', $performancephoto1path, PDO::PARAM_STR);
+        $query->bindParam(':performancephoto2path', $performancephoto2path, PDO::PARAM_STR);
+        $query->bindParam(':performancephoto3path', $performancephoto3path, PDO::PARAM_STR);
         $query->bindParam(':videopath', $videopath, PDO::PARAM_STR);
         $query->bindParam(':email', $email, PDO::PARAM_STR);
         $query->execute();
@@ -376,6 +412,33 @@ if (strlen($_SESSION['login']) == 0) {
                                     <input type="hidden" name="oldnidphoto" value="<?php echo htmlentities($result->NidPhoto);?>">
                                     <div>
                                         <img height="180px" width="230px" src="<?php echo htmlentities($result->NidPhoto)?>" alt="<?php echo'Nid scan copy of '. htmlentities($result->FullName)?>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Best Performance Photo(1)</label>
+                                    <input class="form-control white_bg" name="performancephoto1" type="file" accept="image/*"
+                                    >
+                                    <input type="hidden" name="oldperformancephoto1" value="<?php echo htmlentities($result->PerformancePhoto1);?>">
+                                    <div>
+                                        <img height="180px" width="230px" src="<?php echo htmlentities($result->PerformancePhoto1)?>" alt="<?php echo'Performance photo of '. htmlentities($result->FullName)?>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Best Performance Photo(2)</label>
+                                    <input class="form-control white_bg" name="performancephoto2" type="file" accept="image/*"
+                                    >
+                                    <input type="hidden" name="oldperformancephoto2" value="<?php echo htmlentities($result->PerformancePhoto2);?>">
+                                    <div>
+                                        <img height="180px" width="230px" src="<?php echo htmlentities($result->PerformancePhoto2)?>" alt="<?php echo'Performance photo of '. htmlentities($result->FullName)?>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Best Performance Photo(3)</label>
+                                    <input class="form-control white_bg" name="performancephoto3" type="file" accept="image/*"
+                                    >
+                                    <input type="hidden" name="oldperformancephoto3" value="<?php echo htmlentities($result->PerformancePhoto3);?>">
+                                    <div>
+                                        <img height="180px" width="230px" src="<?php echo htmlentities($result->PerformancePhoto3)?>" alt="<?php echo'Performance photo of '. htmlentities($result->FullName)?>">
                                     </div>
                                 </div>
                                 <div class="form-group">

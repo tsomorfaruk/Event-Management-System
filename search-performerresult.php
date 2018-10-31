@@ -107,7 +107,7 @@ error_reporting(0);
                                 </div>
                                 <div class="product-listing-content">
                                     <h5>
-                                        <a href="performer-details.php?vhid=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->CategoryName); ?>
+                                        <a href="performer-details.php?id=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->CategoryName); ?>
                                             , <?php echo htmlentities($result->FullName); ?></a></h5>
                                     <p class="list-price">BDT<?php echo htmlentities($result->PerformanceCost); ?> Per
                                         Day</p>
@@ -120,7 +120,7 @@ error_reporting(0);
                                             no
                                         </li>
                                     </ul>
-                                    <a href="performer-details.php?vhid=<?php echo htmlentities($result->id); ?>"
+                                    <a href="performer-details.php?id=<?php echo htmlentities($result->id); ?>"
                                        class="btn">View
                                         Details <span class="angle_arrow"><i class="fa fa-angle-right"
                                                                              aria-hidden="true"></i></span></a>
@@ -264,11 +264,11 @@ error_reporting(0);
 
                                     <li class="gray-bg">
                                         <div class="recent_post_img"><a
-                                                href="performer-details.php?vhid=<?php echo htmlentities($result->id); ?>"><img
+                                                href="performer-details.php?id=<?php echo htmlentities($result->id); ?>"><img
                                                     src="<?php echo htmlentities($result->PerformerPhoto); ?>"
                                                     alt="image"></a></div>
                                         <div class="recent_post_title"><a
-                                                href="performer-details.php?vhid=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->CategoryName); ?>
+                                                href="performer-details.php?id=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->CategoryName); ?>
                                                 , <?php echo htmlentities($result->FullName); ?></a>
                                             <p class="widget_price">
                                                 BDT<?php echo htmlentities($result->PerformanceCost); ?> Per Day</p>

@@ -6,16 +6,14 @@ if (strlen($_SESSION['login']) == 0) {
     header('location:index.php');
 } else {
     if (isset($_POST['changeactive'])) {
-        $fromcalender =$_POST['fromcalendar'];
-        $tocalender = $_POST['tocalendar'];
+        $inactive =$_POST['inactive'];
         $userid = $_POST['userid'];
-        $sql = "INSERT INTO tblactivationstatus(PerformerId,FromInactive,ToInactive) VALUES(:pid,:fromcalender,:tocalender)";
+        $sql = "INSERT INTO tblactivationstatus(PerformerId,InactiveDates) VALUES(:pid,:inactive)";
         $query = $dbh->prepare($sql);
         $query->bindParam(':pid', $userid, PDO::PARAM_STR);
-        $query->bindParam(':fromcalender', $fromcalender, PDO::PARAM_STR);
-        $query->bindParam(':tocalender', $tocalender, PDO::PARAM_STR);
+        $query->bindParam(':inactive', $inactive, PDO::PARAM_STR);
         $query->execute();
-        $msg = "Activation Status Set Successfully";
+        $msg = "Inactivative Dates Set Successfully";
     }
 
     ?>
@@ -159,49 +157,25 @@ if (strlen($_SESSION['login']) == 0) {
                                     if ($query->rowCount() > 0) {
                                         foreach ($results as $result)
                                         {
-                                            $frominactive = date('d-m-Y',strtotime($result->FromInactive));
-                                            $toinactive = date('d-m-Y',strtotime($result->ToInactive));
-
-                                            date_default_timezone_set('Asia/Dhaka');
-                                            $timezone = date_default_timezone_get();
-                                            if (strtotime($timezone)>=strtotime($frominactive) & strtotime($timezone)<=strtotime($toinactive))
-                                            {
-                                                ?>
-                                                <div class="widget_heading">
-                                                    <h5 style="color: whitesmoke; background-color: #f73838; text-align: center ">INACTIVE</h5>
-                                                    <p>You are InActive from <?php echo $frominactive;?> to <?php echo $toinactive;?></p>
-                                                </div>
-                                                <?php
-                                            }
-                                            else
-                                            {
-                                                ?>
-                                                <div class="form-group">
-                                                    <h5 style="color: black; background-color: #6be83a; text-align: center ">Now You are Active</h5>
-                                                </div>
-                                                <?php
-                                            }
+                                            ?>
+                                            <div>
+                                                <p>You are inactive in <strong><?php echo $result->InactiveDates;?></strong> dates.</p>
+                                            </div>
+                                            <?php
                                         }
                                     }
-
-                                    ?>
-                                <?php
                                 if ($msg) {
                                     ?>
                                     <div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?>
                                     </div><?php } ?>
                                 <form method="post">
-                                    <input type="hidden" name="userid" value="<?php echo $result->id;?>">
+                                    <input type="hidden" name="userid" value="<?php echo $pid;?>">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="InActive From" name="fromcalendar"
-                                               id="fromcalender"/>
+                                        <input type="text" class="form-control" placeholder="You can select multiple dates" name="inactive"
+                                               id="inactive"/>
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="InActive To" name="tocalendar"
-                                               id="tocalender"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <button class="btn" name="changeactive">Add to Cart</button>
+                                        <button class="btn" name="changeactive"> Change Inactive Date</button>
                                     </div>
                                 </form>
                             </div>
@@ -241,16 +215,13 @@ if (strlen($_SESSION['login']) == 0) {
     <script src="assets/js/owl.carousel.min.js"></script>
     <script type="text/javascript" src="assets/js/jquery.js"></script>
     <script type="text/javascript" src="assets/js/jquery-ui.js"></script>
-
+    <script type="text/javascript" src="assets/js/jquery-ui.multidatespicker.js"></script>
     <script>
         $(document).ready(function () {
-            $( "#fromcalender" ).datepicker({
+            $('#inactive').multiDatesPicker({
+                dateFormate: 'dd-mm-yy',
                 minDate: 0,
-                maxDate: 90
-            });
-            $('#tocalender').datepicker({
-                minDate: 0,
-                maxDate: 90
+                maxDate: 180,
             });
         });
     </script>

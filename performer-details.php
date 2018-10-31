@@ -108,7 +108,6 @@ $query = $dbh->prepare($sql);
 $query->bindParam(':id', $id, PDO::PARAM_STR);
 $query->execute();
 $results = $query->fetchAll(PDO::FETCH_OBJ);
-$cnt = 1;
 if ($query->rowCount() > 0)
 {
 foreach ($results
@@ -152,6 +151,27 @@ $_SESSION['categoryid'] = $result->CategoryId;
                         </li>
                         <li><i class="fa fa-user-plus" aria-hidden="true"></i>
                             <h5><?php echo htmlentities($result->City); ?></h5>
+                            <p>Zone</p>
+                        </li>
+                        <li><i class="fa fa-user-plus" aria-hidden="true"></i>
+                            <?php
+                            $pid = $result->id;
+                            $status = 1;
+                            $sql = "SELECT * from tblbooking where PerformerId=:pid AND Status=:status";
+                            $query = $dbh->prepare($sql);
+                            $query->bindParam(':pid', $id, PDO::PARAM_STR);
+                            $query->bindParam(':status', $status, PDO::PARAM_STR);
+                            $query->execute();
+                            $results = $query->fetchAll(PDO::FETCH_OBJ);
+                            $cnt = 0;
+                            if ($query->rowCount() > 0) {
+                                foreach ($results as $resultss) {
+                                    $cnt = $cnt + 1;
+                                }
+
+                            }
+                            ?>
+                            <h5><?php echo $cnt; ?></h5>
                             <p>Performed</p>
                         </li>
                     </ul>
@@ -180,6 +200,24 @@ $_SESSION['categoryid'] = $result->CategoryId;
                             <div role="tabpanel" class="tab-pane" id="accessories">
                                 <!--Accessories-->
                                 <div>
+                                    <h3>Performance Photo(1)</h3>
+                                    <img height="320px" width="500px"
+                                         src="<?php echo htmlentities($result->PerformancePhoto1) ?>"
+                                         controls/>
+                                </div>
+                                <div>
+                                    <h3>Performance Photo(2)</h3>
+                                    <img height="320px" width="500px"
+                                         src="<?php echo htmlentities($result->PerformancePhoto2) ?>"
+                                         controls/>
+                                </div>
+                                <div>
+                                    <h3>Performance Photo(3)</h3>
+                                    <img height="320px" width="500px"
+                                         src="<?php echo htmlentities($result->PerformancePhoto3) ?>"
+                                         controls/>
+                                </div>
+                                <div>
                                     <h3>Performance Video</h3>
                                     <video height="320px" width="500px" src="<?php echo htmlentities($result->Video) ?>"
                                            controls> Upload your Performance video
@@ -190,7 +228,7 @@ $_SESSION['categoryid'] = $result->CategoryId;
                                 <!--Accessories-->
                                 <div>
                                     <?php
-                                    $pid = $result->id;
+
                                     $sql = "SELECT * from tbltestimonial where PerformerId = :pid order by id desc LIMIT 1";
                                     $query = $dbh->prepare($sql);
                                     $query->bindParam(':pid', $pid, PDO::PARAM_STR);
@@ -253,7 +291,6 @@ $_SESSION['categoryid'] = $result->CategoryId;
                 </div>
                 <div class="sidebar_widget">
                     <?php
-                    $pid = $result->id;
                     $sql = "SELECT * FROM tblactivationstatus WHERE PerformerId=:performerid order by id desc LIMIT 1";
                     $query = $dbh->prepare($sql);
                     $query->bindParam(':performerid', $pid, PDO::PARAM_STR);
@@ -261,48 +298,31 @@ $_SESSION['categoryid'] = $result->CategoryId;
                     $results = $query->fetchAll(PDO::FETCH_OBJ);
                     if ($query->rowCount() > 0) {
                         foreach ($results as $result) {
-                            $frominactive = date('d-m-Y', strtotime($result->FromInactive));
-                            $toinactive = date('d-m-Y', strtotime($result->ToInactive));
-                            date_default_timezone_set('Asia/Dhaka');
-                            $timezone = date_default_timezone_get();
-                            if (strtotime($timezone) >= strtotime($frominactive) & strtotime($timezone) <= strtotime($toinactive)) {
-                                ?>
-                                <div class="widget_heading">
-                                    <h5 style="color: whitesmoke; background-color: #f73838; text-align: center ">
-                                        INACTIVE</h5>
-                                    <p>Performer In Active from <?php echo $frominactive; ?>
-                                        to <?php echo $toinactive; ?></p>
-                                </div>
-                                <?php
-                            } else {
-                                ?>
+                            $inactivedates = $result->InactiveDates;
+                            $inactivearr = explode(', ', $inactivedates);
+                            ?>
+                            <p>Invisible dates are not available for hiring.</p>
+                            <form method="post">
                                 <div class="form-group">
-                                    <h5 style="color: black; background-color: #6be83a; text-align: center ">ACTIVE</h5>
+                                    <input type="text" class="form-control" placeholder="Date" name="calendar"
+                                           id="calendar"/>
                                 </div>
-                                <form method="post">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Date" name="calendar"
-                                               id="calendar"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <button class="btn" name="cartresult">Add to Cart</button>
-                                    </div>
-                                </form>
-                                <?php
-                            }
+                                <div class="form-group">
+                                    <button class="btn" name="cartresult">Hire</button>
+                                </div>
+                            </form>
+                            <?php
                         }
                     } else {
                         ?>
-                        <div class="form-group">
-                            <h5 style="color: black; background-color: #6be83a; text-align: center ">ACTIVE</h5>
-                        </div>
+                        <p>Invisible dates are not available for hiring.</p>
                         <form method="post">
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Date" name="calendar"
                                        id="calendar"/>
                             </div>
                             <div class="form-group">
-                                <button class="btn" name="cartresult">Add to Cart</button>
+                                <button class="btn" name="cartresult">Hire</button>
                             </div>
                         </form>
                         <?php
@@ -329,7 +349,6 @@ $_SESSION['categoryid'] = $result->CategoryId;
                 $query->bindParam(':categoryid', $categoryid, PDO::PARAM_STR);
                 $query->execute();
                 $results = $query->fetchAll(PDO::FETCH_OBJ);
-                $cnt = 1;
                 if ($query->rowCount() > 0) {
                     foreach ($results as $result) { ?>
                         <div class="col-md-3 grid_listing">
@@ -337,7 +356,7 @@ $_SESSION['categoryid'] = $result->CategoryId;
                                 <div class="product-listing-img"><a
                                             href="performer-details.php?id=<?php echo htmlentities($result->id); ?>"><img
                                                 src="<?php echo htmlentities($result->PerformerPhoto); ?>"
-                                                class="img-responsive"alt="image"/> </a>
+                                                class="img-responsive" alt="image"/> </a>
                                 </div>
                                 <div class="product-listing-content">
                                     <h5>
@@ -347,9 +366,28 @@ $_SESSION['categoryid'] = $result->CategoryId;
 
                                     <ul class="features_list">
 
-                                        <li><i class="fa fa-user" aria-hidden="true"></i> performed</li>
+                                        <li><i class="fa fa-user" aria-hidden="true"></i>
+                                            <?php
+                                            $id = $result->id;
+                                            $status = 1;
+                                            $sql = "SELECT * from tblbooking where PerformerId=:pid AND Status=:status";
+                                            $query = $dbh->prepare($sql);
+                                            $query->bindParam(':pid', $id, PDO::PARAM_STR);
+                                            $query->bindParam(':status', $status, PDO::PARAM_STR);
+                                            $query->execute();
+                                            $results = $query->fetchAll(PDO::FETCH_OBJ);
+                                            $cnt = 0;
+                                            if ($query->rowCount() > 0) {
+                                                foreach ($results as $resul) {
+                                                    $cnt = $cnt + 1;
+                                                }
+
+                                            }
+                                            echo $cnt; ?>
+                                            performed
+                                        </li>
                                         <li><i class="fa fa-calendar"
-                                               aria-hidden="true"></i><?php echo htmlentities($result->id); ?> reg. no
+                                               aria-hidden="true"></i><?php echo htmlentities($id); ?> reg. no
                                         </li>
                                         <!--  <li><i class="fa fa-car" aria-hidden="true"></i><?php echo htmlentities($result->City); ?></li> -->
                                     </ul>
@@ -406,10 +444,9 @@ $_SESSION['categoryid'] = $result->CategoryId;
             minDate: 0,
             maxDate: 90,
             beforeShowDay: function (date) {
-                dateFormat: 'dd-mm-yy';
-
-                var disableDays = ["16-10-2018", "16-12-2018"];
-                var sdate = $.datepicker.formatDate('dd-mm-yy', date);
+                dateFormat: 'mm/dd/yy';
+                var disableDays = <?php echo json_encode($inactivearr);?>;
+                var sdate = $.datepicker.formatDate('mm/dd/yy', date);
                 console.log(sdate);
                 if ($.inArray(sdate, disableDays) == -1) {
                     return [true]
